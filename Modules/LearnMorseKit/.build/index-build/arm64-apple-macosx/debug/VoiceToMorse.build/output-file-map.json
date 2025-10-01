@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/master.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/Features/VoiceToMorse/VoiceToMorseView.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/VoiceToMorseView.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/VoiceToMorseView.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/VoiceToMorseView~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/VoiceToMorseView.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/VoiceToMorseView.dia"
+  }
+}

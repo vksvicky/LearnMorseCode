@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/master.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/Features/MorseReference/MorseReferenceView.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/MorseReferenceView.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/MorseReferenceView.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/MorseReferenceView~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/MorseReferenceView.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseReference.build/MorseReferenceView.dia"
+  }
+}

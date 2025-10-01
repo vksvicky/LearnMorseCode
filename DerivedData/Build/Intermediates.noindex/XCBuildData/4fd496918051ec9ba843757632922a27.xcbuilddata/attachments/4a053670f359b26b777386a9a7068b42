@@ -1,0 +1,4 @@
+module TextToMorse {
+header "TextToMorse-Swift.h"
+export *
+}

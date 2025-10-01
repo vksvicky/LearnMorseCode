@@ -1,0 +1,4 @@
+module MorseCore {
+header "MorseCore-Swift.h"
+export *
+}

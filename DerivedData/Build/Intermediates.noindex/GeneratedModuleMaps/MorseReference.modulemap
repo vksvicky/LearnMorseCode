@@ -1,0 +1,4 @@
+module MorseReference {
+header "MorseReference-Swift.h"
+export *
+}

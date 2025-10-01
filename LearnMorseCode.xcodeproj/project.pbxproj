@@ -1,0 +1,564 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E2A93EAC2E8BC28000EE2075 /* MorseCore in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EAB2E8BC28000EE2075 /* MorseCore */; };
+		E2A93EAE2E8BC28800EE2075 /* LearnMorseUI in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EAD2E8BC28800EE2075 /* LearnMorseUI */; };
+		E2A93EB02E8BC28E00EE2075 /* MorseReference in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EAF2E8BC28E00EE2075 /* MorseReference */; };
+		E2A93EB22E8BC29400EE2075 /* TextToMorse in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EB12E8BC29400EE2075 /* TextToMorse */; };
+		E2A93EB42E8BC29800EE2075 /* VoiceToMorse in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EB32E8BC29800EE2075 /* VoiceToMorse */; };
+		E2A93EB62E8BC29C00EE2075 /* GameMode in Frameworks */ = {isa = PBXBuildFile; productRef = E2A93EB52E8BC29C00EE2075 /* GameMode */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E2A93E8D2E8BC0D400EE2075 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E2A93E752E8BC0D300EE2075 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E2A93E7C2E8BC0D300EE2075;
+			remoteInfo = LearnMorseCode;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnMorseCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2A93E8C2E8BC0D400EE2075 /* LearnMorseCodeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LearnMorseCodeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LearnMorseCode;
+			sourceTree = "<group>";
+		};
+		E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LearnMorseCodeTests;
+			sourceTree = "<group>";
+		};
+		E2A93E992E8BC0D400EE2075 /* LearnMorseCodeUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LearnMorseCodeUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E2A93E7A2E8BC0D300EE2075 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2A93EB02E8BC28E00EE2075 /* MorseReference in Frameworks */,
+				E2A93EB42E8BC29800EE2075 /* VoiceToMorse in Frameworks */,
+				E2A93EB22E8BC29400EE2075 /* TextToMorse in Frameworks */,
+				E2A93EB62E8BC29C00EE2075 /* GameMode in Frameworks */,
+				E2A93EAE2E8BC28800EE2075 /* LearnMorseUI in Frameworks */,
+				E2A93EAC2E8BC28000EE2075 /* MorseCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2A93E892E8BC0D400EE2075 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E2A93E742E8BC0D300EE2075 = {
+			isa = PBXGroup;
+			children = (
+				E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */,
+				E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */,
+				E2A93E992E8BC0D400EE2075 /* LearnMorseCodeUITests */,
+				E2A93EAA2E8BC28000EE2075 /* Frameworks */,
+				E2A93E7E2E8BC0D300EE2075 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E2A93E7E2E8BC0D300EE2075 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */,
+				E2A93E8C2E8BC0D400EE2075 /* LearnMorseCodeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2A93EAA2E8BC28000EE2075 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E2A93E7C2E8BC0D300EE2075 /* LearnMorseCode */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2A93EA02E8BC0D400EE2075 /* Build configuration list for PBXNativeTarget "LearnMorseCode" */;
+			buildPhases = (
+				E2A93E792E8BC0D300EE2075 /* Sources */,
+				E2A93E7A2E8BC0D300EE2075 /* Frameworks */,
+				E2A93E7B2E8BC0D300EE2075 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */,
+			);
+			name = LearnMorseCode;
+			packageProductDependencies = (
+				E2A93EAB2E8BC28000EE2075 /* MorseCore */,
+				E2A93EAD2E8BC28800EE2075 /* LearnMorseUI */,
+				E2A93EAF2E8BC28E00EE2075 /* MorseReference */,
+				E2A93EB12E8BC29400EE2075 /* TextToMorse */,
+				E2A93EB32E8BC29800EE2075 /* VoiceToMorse */,
+				E2A93EB52E8BC29C00EE2075 /* GameMode */,
+			);
+			productName = LearnMorseCode;
+			productReference = E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E2A93E8B2E8BC0D400EE2075 /* LearnMorseCodeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2A93EA32E8BC0D400EE2075 /* Build configuration list for PBXNativeTarget "LearnMorseCodeTests" */;
+			buildPhases = (
+				E2A93E882E8BC0D400EE2075 /* Sources */,
+				E2A93E892E8BC0D400EE2075 /* Frameworks */,
+				E2A93E8A2E8BC0D400EE2075 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E2A93E8E2E8BC0D400EE2075 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */,
+			);
+			name = LearnMorseCodeTests;
+			packageProductDependencies = (
+			);
+			productName = LearnMorseCodeTests;
+			productReference = E2A93E8C2E8BC0D400EE2075 /* LearnMorseCodeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E2A93E752E8BC0D300EE2075 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					E2A93E7C2E8BC0D300EE2075 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					E2A93E8B2E8BC0D400EE2075 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = E2A93E7C2E8BC0D300EE2075;
+					};
+				};
+			};
+			buildConfigurationList = E2A93E782E8BC0D300EE2075 /* Build configuration list for PBXProject "LearnMorseCode" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E2A93E742E8BC0D300EE2075;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E2A93E7E2E8BC0D300EE2075 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E2A93E7C2E8BC0D300EE2075 /* LearnMorseCode */,
+				E2A93E8B2E8BC0D400EE2075 /* LearnMorseCodeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E2A93E7B2E8BC0D300EE2075 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2A93E8A2E8BC0D400EE2075 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E2A93E792E8BC0D300EE2075 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2A93E882E8BC0D400EE2075 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E2A93E8E2E8BC0D400EE2075 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E2A93E7C2E8BC0D300EE2075 /* LearnMorseCode */;
+			targetProxy = E2A93E8D2E8BC0D400EE2075 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E2A93E9E2E8BC0D400EE2075 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E2A93E9F2E8BC0D400EE2075 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		E2A93EA12E8BC0D400EE2075 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = club.cycleruncode.LearnMorseCode;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		E2A93EA22E8BC0D400EE2075 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = club.cycleruncode.LearnMorseCode;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		E2A93EA42E8BC0D400EE2075 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = club.cycleruncode.LearnMorseCodeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LearnMorseCode.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LearnMorseCode";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		E2A93EA52E8BC0D400EE2075 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = club.cycleruncode.LearnMorseCodeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LearnMorseCode.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LearnMorseCode";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E2A93E782E8BC0D300EE2075 /* Build configuration list for PBXProject "LearnMorseCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2A93E9E2E8BC0D400EE2075 /* Debug */,
+				E2A93E9F2E8BC0D400EE2075 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2A93EA02E8BC0D400EE2075 /* Build configuration list for PBXNativeTarget "LearnMorseCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2A93EA12E8BC0D400EE2075 /* Debug */,
+				E2A93EA22E8BC0D400EE2075 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2A93EA32E8BC0D400EE2075 /* Build configuration list for PBXNativeTarget "LearnMorseCodeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2A93EA42E8BC0D400EE2075 /* Debug */,
+				E2A93EA52E8BC0D400EE2075 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Modules/LearnMorseKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E2A93EAB2E8BC28000EE2075 /* MorseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = MorseCore;
+		};
+		E2A93EAD2E8BC28800EE2075 /* LearnMorseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = LearnMorseUI;
+		};
+		E2A93EAF2E8BC28E00EE2075 /* MorseReference */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = MorseReference;
+		};
+		E2A93EB12E8BC29400EE2075 /* TextToMorse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = TextToMorse;
+		};
+		E2A93EB32E8BC29800EE2075 /* VoiceToMorse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = VoiceToMorse;
+		};
+		E2A93EB52E8BC29C00EE2075 /* GameMode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2A93EA92E8BC20100EE2075 /* XCLocalSwiftPackageReference "Modules/LearnMorseKit" */;
+			productName = GameMode;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E2A93E752E8BC0D300EE2075 /* Project object */;
+}

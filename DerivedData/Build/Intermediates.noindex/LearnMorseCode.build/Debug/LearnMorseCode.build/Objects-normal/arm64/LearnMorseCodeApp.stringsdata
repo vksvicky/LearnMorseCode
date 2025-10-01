@@ -1,0 +1,16 @@
+{
+  "source": "/Users/vivek/Development/LearnMorseCode/LearnMorseCode/LearnMorseCodeApp.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Learn Morse Code",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 14
+        }
+      }
+    ]
+  },
+  "version": 1
+}

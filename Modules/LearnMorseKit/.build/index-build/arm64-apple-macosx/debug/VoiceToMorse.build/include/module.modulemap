@@ -1,0 +1,3 @@
+module VoiceToMorse {
+    header "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/VoiceToMorse.build/include/VoiceToMorse-Swift.h"
+}

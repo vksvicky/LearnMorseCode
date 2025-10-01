@@ -1,0 +1,26 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/master.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseCodeModel.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseCodeModel.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseCodeModel.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseCodeModel~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseCodeModel.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseCodeModel.dia"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseDecoder.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseDecoder.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseDecoder.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseDecoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseDecoder.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseDecoder.dia"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseEncoder.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseEncoder.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseEncoder.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseEncoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseEncoder.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/arm64-apple-macosx/debug/MorseCore.build/MorseEncoder.dia"
+  }
+}

@@ -1,0 +1,4 @@
+module VoiceToMorse {
+header "VoiceToMorse-Swift.h"
+export *
+}

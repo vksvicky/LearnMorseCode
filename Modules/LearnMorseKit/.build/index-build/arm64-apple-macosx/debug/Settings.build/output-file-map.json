@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/master.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/Features/Settings/SettingsView.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/SettingsView.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/SettingsView.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/Settings.build/SettingsView.dia"
+  }
+}

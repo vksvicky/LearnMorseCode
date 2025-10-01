@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/master.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/LearnMorseUI/MorseCodeCard.swift": {
+    "dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/MorseCodeCard.d",
+    "object": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/MorseCodeCard.swift.o",
+    "swiftmodule": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/MorseCodeCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/MorseCodeCard.swiftdeps",
+    "diagnostics": "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/.build/index-build/arm64-apple-macosx/debug/LearnMorseUI.build/MorseCodeCard.dia"
+  }
+}

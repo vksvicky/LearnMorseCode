@@ -1,0 +1,4 @@
+module GameMode {
+header "GameMode-Swift.h"
+export *
+}

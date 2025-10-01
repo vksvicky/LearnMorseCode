@@ -1,0 +1,69 @@
+{
+  "" : {
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCore-primary.dia",
+    "emit-module-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCore-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCore-primary-emit-module.dia",
+    "pch" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCore-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCore-primary.swiftdeps"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/Achievement.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/Achievement~partial.swiftmodule"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseCodeModel.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseCodeModel~partial.swiftmodule"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseDecoder.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseDecoder~partial.swiftmodule"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/MorseEncoder.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/MorseEncoder~partial.swiftmodule"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Models/ProgressTracker.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/ProgressTracker~partial.swiftmodule"
+  },
+  "/Users/vivek/Development/LearnMorseCode/Modules/LearnMorseKit/MorseCore/Services/AudioService.swift" : {
+    "const-values" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.swiftconstvalues",
+    "dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.d",
+    "diagnostics" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.dia",
+    "index-unit-output-path" : "/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.o",
+    "llvm-bc" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.bc",
+    "object" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.o",
+    "swift-dependencies" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService.swiftdeps",
+    "swiftmodule" : "/Users/vivek/Development/LearnMorseCode/DerivedData/Build/Intermediates.noindex/LearnMorseKit.build/Debug/MorseCore.build/Objects-normal/arm64/AudioService~partial.swiftmodule"
+  }
+}
