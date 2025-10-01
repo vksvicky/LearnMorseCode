@@ -9,8 +9,9 @@ public struct TextToMorseView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var isConverting = false
+    @State private var conversionTask: Task<Void, Never>?
     @State private var conversionType: ConversionType = .auto
-
+    
     public init() {}
 
     enum ConversionType {
@@ -18,7 +19,7 @@ public struct TextToMorseView: View {
         case morseToText
         case auto
     }
-
+    
     public var body: some View {
         VStack(spacing: 0) {
             ScrollView {
@@ -30,14 +31,14 @@ public struct TextToMorseView: View {
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Button("Clear") {
-                                inputText = ""
+                        Button("Clear") {
+                            inputText = ""
                                 outputText = ""
-                            }
+                        }
                             .font(.headline)
                             .foregroundColor(.blue)
                         }
-
+                        
                         TextEditor(text: $inputText)
                             .frame(minHeight: 200)
                             .padding(16)
@@ -47,30 +48,42 @@ public struct TextToMorseView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color(.separatorColor), lineWidth: 1)
                             )
-                            .onChange(of: inputText) { _, newValue in
+                        .onChange(of: inputText) { _, newValue in
                                 // Clear output when input changes
                                 outputText = ""
                                 // Auto-detect conversion type
                                 conversionType = detectConversionType(newValue)
-                            }
+                        }
+                        
+                        // Helpful note about Morse code formatting
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.blue)
+                                .font(.caption)
+                            Text("💡 Tip: For accurate Morse-to-text conversion, use spaces between letters (e.g., '.... . .-.. .-.. ---' for 'HELLO')")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 4)
                     }
                     .frame(maxWidth: 800)
-
+                    
                     // Single Convert button
                     Button(action: convert) {
-                        HStack {
+                            HStack {
                             Image(systemName: "arrow.left.arrow.right")
                             Text(buttonText)
-                        }
-                        .font(.headline)
+                            }
+                            .font(.headline)
                         .frame(maxWidth: 300)
-                        .padding(.vertical, 16)
+                            .padding(.vertical, 16)
                         .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
                     }
                     .disabled(inputText.isEmpty || isConverting)
-
+                    
                     // Output section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -80,16 +93,16 @@ public struct TextToMorseView: View {
                             Spacer()
                             HStack(spacing: 16) {
                                 if isMorseOutput {
-                                    Button("Play") {
+                                Button("Play") {
                                         // Convert continuous Morse back to spaced format for audio
                                         let audioMorse = formatMorseForAudio(outputText)
                                         morseModel.playMorseCode(audioMorse)
-                                    }
-                                    .font(.headline)
-                                    .foregroundColor(.green)
+                                }
+                                .font(.headline)
+                                .foregroundColor(.green)
                                     .disabled(outputText.isEmpty)
                                 }
-
+                                
                                 Button("Copy") {
                                     copyToClipboard(outputText)
                                 }
@@ -98,7 +111,7 @@ public struct TextToMorseView: View {
                                 .disabled(outputText.isEmpty)
                             }
                         }
-
+                        
                         ScrollView {
                             Text(outputText.isEmpty ? placeholderText : outputText)
                                 .font(isMorseOutput ?
@@ -128,7 +141,7 @@ public struct TextToMorseView: View {
             Text(errorMessage)
         }
     }
-
+    
     // MARK: - Computed Properties
 
     private var buttonText: String {
@@ -248,12 +261,16 @@ public struct TextToMorseView: View {
     }
     
     private func splitContinuousMorse(_ morse: String) -> String {
-        // Try different splitting strategies
+        // Use multiple strategies inspired by research on Morse code decoding
+        // This handles ambiguous continuous Morse sequences better
+        
         let strategies = [
-            // Strategy 1: Split by common letter boundaries
-            splitByCommonPatterns(morse),
-            // Strategy 2: Try to find valid combinations
-            tryAllCombinations(morse)
+            // Strategy 1: Try with all patterns (longest first)
+            tryParseWithAllPatterns(morse),
+            // Strategy 2: Try with letters only (more common in text)
+            tryParseWithLettersOnly(morse),
+            // Strategy 3: Try with common patterns first
+            tryParseWithCommonPatterns(morse)
         ]
         
         // Return the first valid result
@@ -263,60 +280,79 @@ public struct TextToMorseView: View {
             }
         }
         
-        return morse // Return original if no valid split found
+        // If no valid split found, return original
+        return morse
     }
     
-    private func splitByCommonPatterns(_ morse: String) -> String {
-        // Try to split by inserting spaces at common boundaries
-        var result = morse
-        
-        // Common letter patterns that are unambiguous
-        let commonPatterns = [
-            ("...", " ... "), // S
-            ("---", " --- "), // O
-            ("-", " - "),     // T
-            (".", " . "),     // E
-            ("--", " -- "),   // M
-            ("..", " .. "),   // I
-        ]
-        
-        for (pattern, replacement) in commonPatterns {
-            result = result.replacingOccurrences(of: pattern, with: replacement)
-        }
-        
-        // Clean up multiple spaces
-        result = result.replacingOccurrences(of: "  ", with: " ")
-        return result.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    private func tryAllCombinations(_ morse: String) -> String {
-        // Try to find a valid combination by testing different splits
-        let patterns = [
-            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
-            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
-            "..-", "...-", ".--", "-..-", "-.--", "--..",
+    private func tryParseWithAllPatterns(_ morse: String) -> String {
+        let allPatterns = [
+            // Numbers (longest first)
             "-----", ".----", "..---", "...--", "....-", ".....",
-            "-....", "--...", "---..", "----."
+            "-....", "--...", "---..", "----.",
+            // Letters (longest first)
+            "-...", "-.-.", "-..", "..-.", "--.", "....", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.",
+            "...", "..-", "...-", ".--", "-..-", "-.--", "--..",
+            // Single characters
+            ".-", "-", "."
         ]
         
-        // Try to find a valid combination using a more systematic approach
-        if let combination = findBestValidSplit(morse, patterns) {
-            return combination.joined(separator: " ")
+        if let bestSplit = findBestValidSplit(morse, allPatterns) {
+            return bestSplit.joined(separator: " ")
         }
-        
         return ""
     }
     
-    private func findBestValidSplit(_ morse: String, _ patterns: [String]) -> [String]? {
-        // Try all possible combinations and return the one with the fewest parts
-        var bestResult: [String]? = nil
-        var bestCount = Int.max
+    private func tryParseWithLettersOnly(_ morse: String) -> String {
+        let letterPatterns = [
+            // Letters only (longest first)
+            "-...", "-.-.", "-..", "..-.", "--.", "....", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.",
+            "...", "..-", "...-", ".--", "-..-", "-.--", "--..",
+            ".-", "-", "."
+        ]
         
-        func trySplit(_ remaining: String, _ current: [String]) {
+        if let bestSplit = findBestValidSplit(morse, letterPatterns) {
+            return bestSplit.joined(separator: " ")
+        }
+        return ""
+    }
+    
+    private func tryParseWithCommonPatterns(_ morse: String) -> String {
+        // Try with the most common patterns first
+        let commonPatterns = [
+            // Most common letters first
+            ".", "-", "..", "--", "...", "---", ".-", "-.", ".-.", "-..",
+            ".-..", "--.", "....", "-...", "-.-.", "..-.", ".---", "-.-",
+            "..-", "...-", ".--", "-..-", "-.--", "--..", "--.-", ".--."
+        ]
+        
+        if let bestSplit = findBestValidSplit(morse, commonPatterns) {
+            return bestSplit.joined(separator: " ")
+        }
+        return ""
+    }
+    
+    
+    private func findBestValidSplit(_ morse: String, _ patterns: [String]) -> [String]? {
+        // Use backtracking to find the best valid split
+        // This approach is inspired by research on Morse code decoding algorithms
+        
+        var bestResult: [String]? = nil
+        var bestScore = Int.max
+        
+        func trySplit(_ remaining: String, _ current: [String], _ depth: Int = 0) {
+            // Prevent infinite recursion
+            if depth > 50 {
+                return
+            }
+            
             if remaining.isEmpty {
-                if current.count < bestCount {
+                // Found a complete split, evaluate its quality
+                let score = evaluateSplit(current)
+                if score < bestScore {
                     bestResult = current
-                    bestCount = current.count
+                    bestScore = score
                 }
                 return
             }
@@ -325,7 +361,7 @@ public struct TextToMorseView: View {
             for pattern in patterns {
                 if remaining.hasPrefix(pattern) {
                     let newRemaining = String(remaining.dropFirst(pattern.count))
-                    trySplit(newRemaining, current + [pattern])
+                    trySplit(newRemaining, current + [pattern], depth + 1)
                 }
             }
         }
@@ -333,35 +369,101 @@ public struct TextToMorseView: View {
         trySplit(morse, [])
         return bestResult
     }
+    
+    private func evaluateSplit(_ patterns: [String]) -> Int {
+        // Evaluate the quality of a split
+        // Lower score is better
+        
+        // Strongly prefer fewer parts (this is the most important factor)
+        var score = patterns.count * 100
+        
+        // Penalty for using single dots/dashes (prefer longer patterns)
+        for pattern in patterns {
+            if pattern == "." || pattern == "-" {
+                score += 50 // Heavy penalty for single characters
+            }
+        }
+        
+        // Bonus for common patterns (letters over numbers, common letters over rare ones)
+        let commonLetters = ["E", "T", "A", "O", "I", "N", "S", "H", "R", "D", "L", "C", "U", "M", "W", "F", "G", "Y", "P", "B", "V", "K", "J", "X", "Q", "Z"]
+        
+        for pattern in patterns {
+            if let character = morseToCharacter[pattern] {
+                if let index = commonLetters.firstIndex(of: character) {
+                    score -= (commonLetters.count - index) // More common = lower score
+                } else {
+                    // Numbers get a small penalty
+                    score += 10
+                }
+            }
+        }
+        
+        return score
+    }
+    
+    // Helper dictionary to map Morse patterns to characters
+    private let morseToCharacter: [String: String] = [
+        ".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E",
+        "..-.": "F", "--.": "G", "....": "H", "..": "I", ".---": "J",
+        "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O",
+        ".--.": "P", "--.-": "Q", ".-.": "R", "...": "S", "-": "T",
+        "..-": "U", "...-": "V", ".--": "W", "-..-": "X", "-.--": "Y",
+        "--..": "Z",
+        "-----": "0", ".----": "1", "..---": "2", "...--": "3", "....-": "4",
+        ".....": "5", "-....": "6", "--...": "7", "---..": "8", "----.": "9"
+    ]
 
     private func convert() {
+        // Cancel any existing conversion task
+        conversionTask?.cancel()
+        
+        // Create a new debounced conversion task
+        conversionTask = Task {
+            // Wait a bit to debounce rapid changes
+            try? await Task.sleep(nanoseconds: 300_000_000) // 300ms
+            
+            // Check if task was cancelled
+            if Task.isCancelled { return }
+            
+            await MainActor.run {
+                performConversion()
+            }
+        }
+    }
+    
+    private func performConversion() {
         guard !inputText.isEmpty else {
             outputText = ""
             return
         }
+        
+        // Performance optimization: limit input size to prevent hanging
+        let maxInputLength = 1000
+        let textToProcess = inputText.count > maxInputLength ? 
+            String(inputText.prefix(maxInputLength)) + "..." : inputText
         
         isConverting = true
         
         do {
             switch conversionType {
             case .textToMorse:
-                outputText = try convertToMorse(inputText)
+                outputText = try convertToMorse(textToProcess)
             case .morseToText:
-                let formattedInput = formatMorseCode(inputText)
+                let formattedInput = formatMorseCode(textToProcess)
                 outputText = try MorseDecoder().decode(formattedInput)
             case .auto:
                 // Try to auto-detect and convert
-                let detectedType = detectConversionType(inputText)
+                let detectedType = detectConversionType(textToProcess)
                 if detectedType == .textToMorse {
-                    outputText = try convertToMorse(inputText)
+                    outputText = try convertToMorse(textToProcess)
                 } else {
                     // Try Morse to text first, if it fails, try text to Morse
                     do {
-                        let formattedInput = formatMorseCode(inputText)
+                        let formattedInput = formatMorseCode(textToProcess)
                         outputText = try MorseDecoder().decode(formattedInput)
                     } catch {
                         // If Morse decoding fails, try text encoding as fallback
-                        outputText = try convertToMorse(inputText)
+                        outputText = try convertToMorse(textToProcess)
                     }
                 }
             }
@@ -392,23 +494,8 @@ public struct TextToMorseView: View {
             encodedMorse = try MorseEncoder().encode(text)
         }
         
-        // Format the output for proper Morse code display
-        return formatMorseOutput(encodedMorse)
-    }
-    
-    private func formatMorseOutput(_ morse: String) -> String {
-        // For display, we want to show proper Morse code format
-        // But we need to be careful about word separators
-        
-        // Split by word separators first
-        let words = morse.components(separatedBy: " / ")
-        let formattedWords = words.map { word in
-            // Remove spaces within words to create continuous Morse
-            word.replacingOccurrences(of: " ", with: "")
-        }
-        
-        // Join words with space (not /) for cleaner display
-        return formattedWords.joined(separator: " ")
+        // Return the encoded Morse code directly (already properly spaced)
+        return encodedMorse
     }
     
     private func formatMorseForAudio(_ morse: String) -> String {
@@ -504,12 +591,12 @@ public struct TextToMorseView: View {
         
         return result.joined(separator: " / ")
     }
-
+    
     private func showError(_ message: String) {
         errorMessage = message
         showingError = true
     }
-
+    
     private func copyToClipboard(_ text: String) {
         #if os(macOS)
         NSPasteboard.general.clearContents()

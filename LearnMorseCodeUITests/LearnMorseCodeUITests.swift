@@ -156,6 +156,38 @@ final class LearnMorseCodeUITests: XCTestCase {
         XCTAssertTrue(outputText.contains("SOS"))
     }
     
+    @MainActor
+    func testComplexContinuousMorseSequence() throws {
+        // Navigate to Text to Morse tab
+        let textToMorseTab = app.tabBars.buttons["Text↔Morse"]
+        textToMorseTab.tap()
+        
+        // Find the input text field
+        let inputTextField = app.textViews.firstMatch
+        XCTAssertTrue(inputTextField.exists)
+        
+        // Enter the complex continuous Morse sequence
+        // This should decode to "Hello, My name is VU2GOP"
+        let complexMorse = "......-...-..-----..-- ---.-- -..---. ..... ...-..---..---.---.--."
+        inputTextField.tap()
+        inputTextField.typeText(complexMorse)
+        
+        // Find and tap the convert button
+        let convertButton = app.buttons["Convert"]
+        XCTAssertTrue(convertButton.exists)
+        convertButton.tap()
+        
+        // Check that output is displayed
+        let outputTextField = app.textViews.element(boundBy: 1)
+        XCTAssertTrue(outputTextField.exists)
+        
+        // Verify the output contains the expected text
+        let outputText = outputTextField.value as? String ?? ""
+        // This test will fail until we fix the continuous Morse parsing
+        XCTAssertTrue(outputText.contains("Hello") || outputText.contains("VU2GOP"), 
+                     "Expected output to contain 'Hello' or 'VU2GOP', but got: '\(outputText)'")
+    }
+    
     // MARK: - Voice to Morse Tests
     
     @MainActor
