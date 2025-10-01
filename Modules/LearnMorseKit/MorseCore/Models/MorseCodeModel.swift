@@ -6,7 +6,7 @@ public final class MorseCodeModel: ObservableObject {
     @Published public var inputText: String = ""
     @Published public var morseCodeOutput: String = ""
     private let encoder: MorseEncoding
-    public let audioService: AudioService
+    public var audioService: AudioService
     public let progressTracker: ProgressTracker
     public let achievementManager: AchievementManager
     
