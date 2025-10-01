@@ -1,4 +1,0 @@
-module LearnMorseUI {
-header "LearnMorseUI-Swift.h"
-export *
-}
