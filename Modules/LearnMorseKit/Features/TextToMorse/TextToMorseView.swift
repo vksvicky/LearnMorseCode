@@ -11,8 +11,6 @@ public struct TextToMorseView: View {
     @State private var isConverting = false
     @State private var conversionTask: Task<Void, Never>?
     @State private var conversionType: ConversionType = .auto
-    @State private var currentPlayingIndex = 0
-    @State private var playbackTimer: Timer?
     
     public init() {}
 
@@ -23,9 +21,7 @@ public struct TextToMorseView: View {
     }
     
     public var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 30) {
+        VStack(spacing: 30) {
                     // Input section
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
@@ -42,7 +38,8 @@ public struct TextToMorseView: View {
                         }
                         
                         TextEditor(text: $inputText)
-                            .frame(minHeight: 200)
+                            .font(AppFonts.primary())
+                            .frame(height: 150)
                             .padding(16)
                             .background(Color(.controlBackgroundColor))
                             .cornerRadius(12)
@@ -61,9 +58,9 @@ public struct TextToMorseView: View {
                         HStack {
                             Image(systemName: "info.circle")
                                 .foregroundColor(.blue)
-                                .font(.caption)
+                                .font(AppFonts.small())
                             Text("💡 Tip: For accurate Morse-to-text conversion, use spaces between letters (e.g., '.... . .-.. .-.. ---' for 'HELLO')")
-                                .font(.caption)
+                                .font(AppFonts.small())
                                 .foregroundColor(.secondary)
                             Spacer()
                         }
@@ -75,7 +72,7 @@ public struct TextToMorseView: View {
                     Button(action: convert) {
                             HStack {
                             Image(systemName: "arrow.left.arrow.right")
-                            Text(convertButtonText)
+                            Text(buttonText)
                             }
                             .font(.headline)
                         .frame(maxWidth: 300)
@@ -95,14 +92,21 @@ public struct TextToMorseView: View {
                             Spacer()
                             HStack(spacing: 16) {
                                 if isMorseOutput {
-                                HStack(spacing: 8) {
-                                    Button(buttonText) {
-                                        handlePlaybackAction()
-                                    }
-                                    .font(.headline)
-                                    .foregroundColor(buttonColor)
-                                    .disabled(outputText.isEmpty)
+                                Button("Play") {
+                                        // Convert continuous Morse back to spaced format for audio
+                                        let audioMorse = formatMorseForAudio(outputText)
+                                        morseModel.playMorseCode(audioMorse)
                                 }
+                                .font(.headline)
+                                .foregroundColor(.green)
+                                    .disabled(outputText.isEmpty)
+                                    
+                                Button("Stop") {
+                                    morseModel.audioService.stop()
+                                }
+                                .font(.headline)
+                                .foregroundColor(.red)
+                                .disabled(!morseModel.audioService.isPlaying)
                                 }
                                 
                                 Button("Copy") {
@@ -115,11 +119,24 @@ public struct TextToMorseView: View {
                         }
                         
                         ScrollView {
-                            if outputText.isEmpty {
-                                Text(placeholderText)
-                                    .font(isMorseOutput ?
-                                          .system(.body, design: .monospaced) :
-                                          .system(.body, design: .default))
+                            if isMorseOutput {
+                                // Visual feedback for Morse code
+                                MorseCodeVisualView(
+                                    morseCode: outputText.isEmpty ? placeholderText : outputText,
+                                    audioService: morseModel.audioService
+                                )
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(16)
+                                .background(Color(.controlBackgroundColor))
+                                .cornerRadius(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color(.separatorColor), lineWidth: 1)
+                                )
+                            } else {
+                                // Regular text display
+                                Text(outputText.isEmpty ? placeholderText : outputText)
+                                    .font(AppFonts.primary())
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(16)
                                     .background(Color(.controlBackgroundColor))
@@ -128,44 +145,25 @@ public struct TextToMorseView: View {
                                         RoundedRectangle(cornerRadius: 12)
                                             .stroke(Color(.separatorColor), lineWidth: 1)
                                     )
-                            } else {
-                                HighlightedMorseView(
-                                    text: outputText,
-                                    isMorseOutput: isMorseOutput,
-                                    isPlaying: morseModel.audioService.isPlaying,
-                                    currentIndex: currentPlayingIndex
-                                )
-                                .padding(16)
-                                .background(Color(.controlBackgroundColor))
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color(.separatorColor), lineWidth: 1)
-                                )
                             }
                         }
-                        .frame(minHeight: 200)
+                        .frame(height: 150)
                     }
                     .frame(maxWidth: 800)
-                }
-                .padding(.horizontal, 40)
-                .padding(.vertical, 30)
-            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 40)
+        .padding(.vertical, 30)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .alert("Error", isPresented: $showingError) {
             Button("OK") { }
         } message: {
             Text(errorMessage)
         }
-        .onDisappear {
-            playbackTimer?.invalidate()
-        }
     }
     
     // MARK: - Computed Properties
 
-    private var convertButtonText: String {
+    private var buttonText: String {
         switch conversionType {
         case .textToMorse:
             return "Convert to Morse"
@@ -189,24 +187,6 @@ public struct TextToMorseView: View {
 
     private var isMorseOutput: Bool {
         return conversionType == .textToMorse
-    }
-    
-    // MARK: - Playback Button Properties
-    
-    private var buttonText: String {
-        if morseModel.audioService.isPlaying {
-            return morseModel.audioService.isPaused ? "Resume" : "Pause"
-        } else {
-            return "Play"
-        }
-    }
-    
-    private var buttonColor: Color {
-        if morseModel.audioService.isPlaying {
-            return morseModel.audioService.isPaused ? .orange : .blue
-        } else {
-            return .green
-        }
     }
 
     // MARK: - Conversion Logic
@@ -644,109 +624,95 @@ public struct TextToMorseView: View {
         UIPasteboard.general.string = text
         #endif
     }
-    
-    // MARK: - Audio Playback with Highlighting
-    
-    private func handlePlaybackAction() {
-        if morseModel.audioService.isPlaying {
-            if morseModel.audioService.isPaused {
-                resumePlaying()
-            } else {
-                pausePlaying()
-            }
-        } else {
-            startPlaying()
-        }
-    }
-    
-    private func startPlaying() {
-        guard !outputText.isEmpty else { return }
-        
-        currentPlayingIndex = 0
-        
-        // Convert continuous Morse back to spaced format for audio
-        let audioMorse = formatMorseForAudio(outputText)
-        
-        // Start the audio playback
-        morseModel.playMorseCode(audioMorse)
-        
-        // Start visual feedback timer
-        startVisualFeedbackTimer()
-    }
-    
-    private func pausePlaying() {
-        morseModel.audioService.pause()
-        playbackTimer?.invalidate()
-    }
-    
-    private func resumePlaying() {
-        morseModel.audioService.resume()
-        startVisualFeedbackTimer()
-    }
-    
-    private func stopPlaying() {
-        morseModel.audioService.stop()
-        currentPlayingIndex = 0
-        playbackTimer?.invalidate()
-    }
-    
-    private func startVisualFeedbackTimer() {
-        playbackTimer?.invalidate()
-        
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
-            
-            let newPosition = self.morseModel.audioService.getCurrentPosition()
-            if newPosition != self.currentPlayingIndex {
-                self.currentPlayingIndex = newPosition
-            }
-            
-            // Stop timer if playback is finished
-            if !self.morseModel.audioService.isPlaying && !self.morseModel.audioService.isPaused {
-                self.playbackTimer?.invalidate()
-                self.currentPlayingIndex = 0
-            }
-        }
-    }
 }
 
-// MARK: - HighlightedMorseView
+// MARK: - MorseCodeVisualView
 
-struct HighlightedMorseView: View {
-    let text: String
-    let isMorseOutput: Bool
-    let isPlaying: Bool
-    let currentIndex: Int
+struct MorseCodeVisualView: View {
+    let morseCode: String
+    @ObservedObject var audioService: AudioService
     
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
-            ForEach(Array(text.enumerated()), id: \.offset) { index, character in
-                Text(String(character))
-                    .font(isMorseOutput ?
-                          .system(.body, design: .monospaced) :
-                          .system(.body, design: .default))
-                    .foregroundColor(highlightColor(for: index))
-                    .background(highlightBackground(for: index))
-                    .animation(.easeInOut(duration: 0.1), value: currentIndex)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Text(morseCode)
+            .font(AppFonts.large(weight: .bold))
+            .foregroundColor(.primary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .overlay(
+                // Overlay for visual feedback highlighting - only for dots and dashes
+                HStack(alignment: .top, spacing: 0) {
+                    ForEach(Array(morseCode.enumerated()), id: \.offset) { index, character in
+                        if character == "." || character == "-" {
+                            let visualIndex = getVisualIndex(for: index)
+                            Rectangle()
+                                .fill(backgroundColor(for: index))
+                                .frame(width: 14, height: 24) // Approximate character width
+                                .opacity(visualIndex == audioService.currentCharacterIndex ? 1.0 : 0.0)
+                                .animation(.easeInOut(duration: 0.1), value: audioService.currentCharacterIndex)
+                        } else {
+                            // For spaces, slashes, and other characters - no highlighting
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(width: character == " " ? 8 : 12, height: 24)
+                        }
+                    }
+                }
+                .allowsHitTesting(false)
+            )
     }
     
-    private func highlightColor(for index: Int) -> Color {
-        if isPlaying && index == currentIndex {
+    private func textColor(for index: Int) -> Color {
+        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
+        // Only highlight dots and dashes, not spaces
+        guard character == "." || character == "-" else { return .primary }
+        
+        let visualIndex = getVisualIndex(for: index)
+        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
             return .white
-        } else if isPlaying && index < currentIndex {
-            return .secondary
+        } else if visualIndex == audioService.currentCharacterIndex {
+            return .primary
         } else {
             return .primary
         }
     }
     
-    private func highlightBackground(for index: Int) -> Color {
-        if isPlaying && index == currentIndex {
-            return .accentColor
+    private func backgroundColor(for index: Int) -> Color {
+        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
+        // Only highlight dots and dashes, not spaces
+        guard character == "." || character == "-" else { return .clear }
+        
+        let visualIndex = getVisualIndex(for: index)
+        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
+            return .blue
+        } else if visualIndex == audioService.currentCharacterIndex {
+            return .blue.opacity(0.3)
         } else {
             return .clear
         }
+    }
+    
+    private func scaleEffect(for index: Int) -> CGFloat {
+        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
+        // Only scale dots and dashes, not spaces
+        guard character == "." || character == "-" else { return 1.0 }
+        
+        let visualIndex = getVisualIndex(for: index)
+        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
+            return 1.2
+        } else if visualIndex == audioService.currentCharacterIndex {
+            return 1.1
+        } else {
+            return 1.0
+        }
+    }
+    
+    private func getVisualIndex(for stringIndex: Int) -> Int {
+        var visualIndex = 0
+        for i in 0..<stringIndex {
+            let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: i)]
+            if character == "." || character == "-" {
+                visualIndex += 1
+            }
+        }
+        return visualIndex
     }
 }

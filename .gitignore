@@ -99,3 +99,5 @@ Modules/CoverageReport/*
 
 ## Visual Studio Code ##
 .vscode/*
+
+.trunk/*

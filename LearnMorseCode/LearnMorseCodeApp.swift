@@ -10,10 +10,12 @@ import MorseCore
 
 @main
 struct LearnMorseCodeApp: App {
+    @StateObject private var morseModel = MorseCodeModel()
+    
     var body: some Scene {
         WindowGroup("Learn Morse Code") {
             ContentView()
-                .environmentObject(MorseCodeModel())
+                .environmentObject(morseModel)
         }
     }
 }
