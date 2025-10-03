@@ -9,6 +9,7 @@ public class AudioService: ObservableObject {
     private var audioFormat: AVAudioFormat!
     
     @Published public var isPlaying = false
+    @Published public var isPaused = false
     @Published public var speed: Double = 1.0 // Words per minute
     @Published public var volume: Float = 0.5
     @Published public var currentCharacterIndex: Int = -1 // -1 means no character highlighted
@@ -16,6 +17,9 @@ public class AudioService: ObservableObject {
     
     private var visualTimer: Timer?
     private var currentMorseCode: String = ""
+    private var pauseStartTime: Date?
+    private var totalPausedTime: Double = 0
+    private var visualStartTime: Date?
     private struct TimingEvent {
         let time: Double
         let type: String
@@ -80,6 +84,38 @@ public class AudioService: ObservableObject {
         playerNode.stop()
         stopVisualFeedback()
         isPlaying = false
+        isPaused = false
+        totalPausedTime = 0
+        pauseStartTime = nil
+        visualStartTime = nil
+    }
+    
+    public func pause() {
+        guard isPlaying && !isPaused else { return }
+        
+        playerNode.pause()
+        pauseStartTime = Date()
+        isPaused = true
+        isElementPlaying = false
+        
+        // Pause the visual timer
+        visualTimer?.invalidate()
+        visualTimer = nil
+    }
+    
+    public func resume() {
+        guard isPaused else { return }
+        
+        // Calculate total paused time
+        if let pauseStart = pauseStartTime {
+            totalPausedTime += Date().timeIntervalSince(pauseStart)
+        }
+        
+        playerNode.play()
+        isPaused = false
+        
+        // Resume visual feedback from where we left off
+        resumeVisualFeedback()
     }
     
     private func generateMorseAudio(_ morseCode: String) -> AVAudioPCMBuffer {
@@ -250,7 +286,8 @@ public class AudioService: ObservableObject {
         }
         
         logger.info("🔍 Starting visual feedback with \(self.timingEvents.count) events")
-        let startTime = Date()
+        visualStartTime = Date()
+        totalPausedTime = 0
         var eventIndex = 0
         
         visualTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] timer in
@@ -259,7 +296,7 @@ public class AudioService: ObservableObject {
                 return
             }
             
-            let currentTime = Date().timeIntervalSince(startTime)
+            let currentTime = Date().timeIntervalSince(self.visualStartTime!) - self.totalPausedTime
             
             // Check if we have more events to process
             while eventIndex < self.timingEvents.count {
@@ -302,5 +339,65 @@ public class AudioService: ObservableObject {
             self.isElementPlaying = false
         }
         timingEvents.removeAll()
+    }
+    
+    private func resumeVisualFeedback() {
+        guard !timingEvents.isEmpty, let startTime = visualStartTime else { 
+            logger.info("🔍 No timing events or start time to resume visual feedback")
+            return 
+        }
+        
+        logger.info("🔍 Resuming visual feedback with \(self.timingEvents.count) events")
+        var eventIndex = 0
+        
+        // Find the current event index based on elapsed time
+        let currentTime = Date().timeIntervalSince(startTime) - totalPausedTime
+        for (index, event) in timingEvents.enumerated() {
+            if event.time <= currentTime {
+                eventIndex = index + 1
+            } else {
+                break
+            }
+        }
+        
+        visualTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
+            
+            let currentTime = Date().timeIntervalSince(self.visualStartTime!) - self.totalPausedTime
+            
+            // Check if we have more events to process
+            while eventIndex < self.timingEvents.count {
+                let event = self.timingEvents[eventIndex]
+                
+                if currentTime >= event.time {
+                    self.logger.info("🔍 Processing event: \(event.type) for index \(event.index) at time \(currentTime)")
+                    DispatchQueue.main.async {
+                        if event.type == "start" {
+                            self.currentCharacterIndex = event.index
+                            self.isElementPlaying = true
+                            self.logger.info("🔍 Set currentCharacterIndex to \(event.index), isElementPlaying to true")
+                        } else if event.type == "end" {
+                            self.isElementPlaying = false
+                            self.logger.info("🔍 Set isElementPlaying to false")
+                        }
+                    }
+                    eventIndex += 1
+                } else {
+                    break
+                }
+            }
+            
+            // If we've processed all events, stop the timer
+            if eventIndex >= self.timingEvents.count {
+                timer.invalidate()
+                DispatchQueue.main.async {
+                    self.currentCharacterIndex = -1
+                    self.isElementPlaying = false
+                }
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@ public struct TextToMorseView: View {
     @State private var isConverting = false
     @State private var conversionTask: Task<Void, Never>?
     @State private var conversionType: ConversionType = .auto
+    @State private var isPlaying = false
+    @State private var isPaused = false
     
     public init() {}
 
@@ -109,21 +111,48 @@ public struct TextToMorseView: View {
                             Spacer()
                             HStack(spacing: 16) {
                                 if isMorseOutput {
-                                Button("Play") {
+                                Button(action: {
+                                    if isPaused {
+                                        morseModel.audioService.resume()
+                                        isPaused = false
+                                        isPlaying = true
+                                    } else if isPlaying {
+                                        morseModel.audioService.pause()
+                                        isPlaying = false
+                                        isPaused = true
+                                    } else {
                                         // Convert continuous Morse back to spaced format for audio
                                         let audioMorse = formatMorseForAudio(outputText)
                                         morseModel.playMorseCode(audioMorse)
+                                        isPlaying = true
+                                        isPaused = false
+                                    }
+                                }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: isPaused ? "play.fill" : 
+                                                              isPlaying ? "pause.fill" : "play.fill")
+                                        Text(isPaused ? "Resume" : 
+                                             isPlaying ? "Pause" : "Play")
+                                    }
                                 }
                                 .font(.headline)
-                                .foregroundColor(.green)
-                                    .disabled(outputText.isEmpty)
+                                .foregroundColor(isPaused ? .orange : 
+                                               isPlaying ? .red : .green)
+                                .disabled(outputText.isEmpty)
                                     
-                                Button("Stop") {
+                                Button(action: {
                                     morseModel.audioService.stop()
+                                    isPlaying = false
+                                    isPaused = false
+                                }) {
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "stop.fill")
+                                        Text("Stop")
+                                    }
                                 }
                                 .font(.headline)
                                 .foregroundColor(.red)
-                                .disabled(!morseModel.audioService.isPlaying)
+                                .disabled(!isPlaying && !isPaused)
                                 }
                                 
                                 Button("Copy") {
