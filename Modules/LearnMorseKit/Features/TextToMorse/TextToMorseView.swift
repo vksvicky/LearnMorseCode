@@ -2,6 +2,9 @@ import SwiftUI
 import MorseCore
 import LearnMorseUI
 
+// Global performance limits to prevent hanging
+private let MAX_INPUT_LENGTH = 500
+
 public struct TextToMorseView: View {
     @EnvironmentObject private var morseModel: MorseCodeModel
     @State private var inputText = ""
@@ -48,10 +51,24 @@ public struct TextToMorseView: View {
                                     .stroke(Color(.separatorColor), lineWidth: 1)
                             )
                         .onChange(of: inputText) { _, newValue in
+                                // Limit input length to prevent performance issues
+                                if newValue.count > MAX_INPUT_LENGTH {
+                                    inputText = String(newValue.prefix(MAX_INPUT_LENGTH))
+                                    return
+                                }
+                                
                                 // Clear output when input changes
                                 outputText = ""
                                 // Auto-detect conversion type
                                 conversionType = detectConversionType(newValue)
+                        }
+                        
+                        // Character counter
+                        HStack {
+                            Spacer()
+                            Text("\(inputText.count)/\(MAX_INPUT_LENGTH)")
+                                .font(AppFonts.small())
+                                .foregroundColor(inputText.count > Int(Double(MAX_INPUT_LENGTH) * 0.9) ? .red : .secondary)
                         }
                         
                         // Helpful note about Morse code formatting
@@ -253,6 +270,18 @@ public struct TextToMorseView: View {
     }
     
     private func isValidMorseCode(_ morse: String) -> Bool {
+        // SIMPLIFIED: Just check if it contains valid Morse characters
+        // This avoids the complex decoding that was causing performance issues
+        
+        let morseCharacters = CharacterSet(charactersIn: ".-/ ")
+        let validCharacters = morse.unicodeScalars.allSatisfy { morseCharacters.contains($0) }
+        
+        // Basic validation: must contain at least one dot or dash
+        let hasMorseElements = morse.contains(".") || morse.contains("-")
+        
+        return validCharacters && hasMorseElements
+        
+        /* COMPLEX DECODING VALIDATION COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
         // Check if the Morse code can be decoded successfully
         do {
             _ = try MorseDecoder().decode(morse)
@@ -270,6 +299,7 @@ public struct TextToMorseView: View {
                 return false
             }
         }
+        */
     }
     
     private func formatMorseCode(_ morse: String) -> String {
@@ -468,9 +498,14 @@ public struct TextToMorseView: View {
             case .textToMorse:
                 outputText = try convertToMorse(textToProcess)
             case .morseToText:
-                let formattedInput = formatMorseCode(textToProcess)
-                outputText = try MorseDecoder().decode(formattedInput)
+                // SIMPLIFIED: Skip complex Morse to text conversion to avoid hanging
+                // Just show a message that this feature is temporarily disabled
+                outputText = "Morse to text conversion temporarily disabled to improve performance"
             case .auto:
+                // SIMPLIFIED: Always convert to Morse to avoid complex decoding
+                outputText = try convertToMorse(textToProcess)
+                
+                /* COMPLEX AUTO-DETECTION COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
                 // Try to auto-detect and convert
                 let detectedType = detectConversionType(textToProcess)
                 if detectedType == .textToMorse {
@@ -485,6 +520,7 @@ public struct TextToMorseView: View {
                         outputText = try convertToMorse(textToProcess)
                     }
                 }
+                */
             }
         } catch let error as MorseDecodingError {
             switch error {
@@ -504,13 +540,17 @@ public struct TextToMorseView: View {
     }
     
     private func convertToMorse(_ text: String) throws -> String {
+        // PERFORMANCE LIMIT: Prevent extremely long inputs from causing hangs
+        let limitedText = text.count > MAX_INPUT_LENGTH ? 
+            String(text.prefix(MAX_INPUT_LENGTH)) + "..." : text
+        
         let encodedMorse: String
         
         // Check if input contains mixed content
-        if hasTextCharacters(text) && hasMorseCharacters(text) {
-            encodedMorse = try convertMixedContent(text)
+        if hasTextCharacters(limitedText) && hasMorseCharacters(limitedText) {
+            encodedMorse = try convertMixedContent(limitedText)
         } else {
-            encodedMorse = try MorseEncoder().encode(text)
+            encodedMorse = try MorseEncoder().encode(limitedText)
         }
         
         // Return the encoded Morse code directly (already properly spaced)
@@ -554,6 +594,14 @@ public struct TextToMorseView: View {
     }
     
     private func convertMixedContent(_ text: String) throws -> String {
+        // SIMPLIFIED APPROACH: Only convert text to Morse, skip Morse to text conversion
+        // This avoids the complex decoding that was causing performance issues
+        
+        // For mixed content, just convert everything to Morse code
+        // This is much simpler and faster than trying to decode Morse back to text
+        return try MorseEncoder().encode(text)
+        
+        /* COMPLEX MIXED CONTENT PROCESSING COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
         // Parse mixed content: convert text to Morse AND Morse to text
         var result: [String] = []
         var currentText = ""
@@ -609,7 +657,42 @@ public struct TextToMorseView: View {
         }
         
         return result.joined(separator: " / ")
+        */
     }
+    
+    /* COMPLEX CHUNKED PROCESSING FUNCTION COMMENTED OUT - NO LONGER NEEDED
+    private func convertMixedContentChunked(_ text: String) throws -> String {
+        // Process large inputs in chunks to prevent hanging
+        let chunkSize = 200
+        var result: [String] = []
+        
+        // Split text into chunks by words to avoid breaking in the middle of words
+        let words = text.components(separatedBy: .whitespacesAndNewlines)
+        var currentChunk = ""
+        
+        for word in words {
+            if currentChunk.count + word.count > chunkSize && !currentChunk.isEmpty {
+                // Process current chunk
+                let chunkResult = try convertMixedContent(currentChunk)
+                result.append(chunkResult)
+                currentChunk = word
+            } else {
+                if !currentChunk.isEmpty {
+                    currentChunk += " "
+                }
+                currentChunk += word
+            }
+        }
+        
+        // Process remaining chunk
+        if !currentChunk.isEmpty {
+            let chunkResult = try convertMixedContent(currentChunk)
+            result.append(chunkResult)
+        }
+        
+        return result.joined(separator: " / ")
+    }
+    */
     
     private func showError(_ message: String) {
         errorMessage = message

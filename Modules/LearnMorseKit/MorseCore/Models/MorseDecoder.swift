@@ -1,5 +1,8 @@
 import Foundation
 
+// Global performance limits to prevent hanging
+private let MAX_MORSE_LENGTH = 500
+
 public enum MorseDecodingError: Error, Equatable {
     case invalidMorse(String)
 }
@@ -63,29 +66,82 @@ public struct MorseDecoder {
     }
     
     private func parseContinuousMorse(_ morse: String) throws -> String {
-        // Enhanced multi-strategy parsing inspired by best practices from established libraries
+        // PERFORMANCE LIMIT: Prevent extremely long Morse sequences from causing hangs
+        let limitedMorse = morse.count > MAX_MORSE_LENGTH ? 
+            String(morse.prefix(MAX_MORSE_LENGTH)) : morse
         
-        let strategies = [
-            // Strategy 1: Letters first with enhanced word dictionary (most reliable)
-            tryParseWithLettersFirst(morse),
-            // Strategy 2: Context-aware word recognition (inspired by Google's approach)
-            tryParseWithContextAwareness(morse),
-            // Strategy 3: All patterns (longest first)
-            tryParseWithAllPatterns(morse),
-            // Strategy 4: Common patterns first
-            tryParseWithCommonPatterns(morse)
+        // SIMPLIFIED APPROACH: Use simple greedy algorithm for all cases
+        // This replaces the complex multi-strategy approach that was causing performance issues
+        
+        return try parseContinuousMorseGreedy(limitedMorse)
+        
+        /* COMPLEX ALGORITHM COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
+        // Performance optimization: limit input size to prevent hanging
+        if morse.count > 200 {
+            // For very long sequences, use a simple greedy approach
+            return try parseContinuousMorseGreedy(morse)
+        }
+        
+        // For shorter sequences, try the most efficient strategy first
+        let result = tryParseWithLettersFirst(morse)
+        if !result.isEmpty {
+            return result
+        }
+        
+        // Fallback to greedy approach if the smart parsing fails
+        return try parseContinuousMorseGreedy(morse)
+        */
+    }
+    
+    private func parseContinuousMorseGreedy(_ morse: String) throws -> String {
+        // PERFORMANCE LIMIT: Additional safety check
+        if morse.count > MAX_MORSE_LENGTH {
+            throw MorseDecodingError.invalidMorse("Morse sequence too long (max \(MAX_MORSE_LENGTH) characters)")
+        }
+        
+        // Simple greedy approach - much faster for long sequences
+        let patterns = [
+            // Numbers (longest first)
+            "-----", ".----", "..---", "...--", "....-", ".....",
+            "-....", "--...", "---..", "----.",
+            // Letters (longest first)
+            "-...", "-.-.", "-..", "..-.", "--.", "....", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.",
+            "...", "..-", "...-", ".--", "-..-", "-.--", "--..",
+            // Single characters
+            ".-", "-", "."
         ]
         
-        // Return the first valid result
-        for strategy in strategies {
-            if !strategy.isEmpty {
-                return strategy
+        var result: [String] = []
+        var remaining = morse
+        
+        while !remaining.isEmpty {
+            var found = false
+            
+            // Try to find the longest pattern that matches
+            for pattern in patterns {
+                if remaining.hasPrefix(pattern) {
+                    result.append(pattern)
+                    remaining = String(remaining.dropFirst(pattern.count))
+                    found = true
+                    break
+                }
+            }
+            
+            if !found {
+                throw MorseDecodingError.invalidMorse(morse)
+            }
+            
+            // Safety check to prevent infinite loops
+            if result.count > 100 {
+                throw MorseDecodingError.invalidMorse("Too many patterns (max 100)")
             }
         }
         
-        throw MorseDecodingError.invalidMorse(morse)
+        return result.joined(separator: " ")
     }
     
+    /* COMPLEX STRATEGY FUNCTIONS COMMENTED OUT - NO LONGER NEEDED
     private func tryParseWithContextAwareness(_ morse: String) -> String {
         // Context-aware parsing inspired by Google's morse-learn approach
         // This strategy considers the context and tries to find the most "natural" interpretation
@@ -100,7 +156,9 @@ public struct MorseDecoder {
         // For longer sequences, use the same hybrid approach
         return tryParseWithLettersFirst(morse)
     }
+    */
     
+    /* ALL COMPLEX STRATEGY FUNCTIONS COMMENTED OUT - NO LONGER NEEDED
     private func tryParseWithIntelligentPatterns(_ morse: String) -> String {
         // Intelligent pattern matching that considers letter frequency and common combinations
         
@@ -175,22 +233,24 @@ public struct MorseDecoder {
         }
         return ""
     }
+    */
     
+    /* COMPLEX RECURSIVE ALGORITHM COMMENTED OUT - NO LONGER NEEDED
     private func findBestValidSplit(_ morse: String, _ patterns: [String]) -> [String]? {
         // Performance optimization: limit input size to prevent hanging
-        if morse.count > 100 {
-            // For very long sequences, use a simpler greedy approach
+        if morse.count > 50 {
+            // For longer sequences, use a simpler greedy approach
             return findGreedySplit(morse, patterns)
         }
         
         var bestResult: [String]? = nil
         var bestScore = Int.max
         var exploredCount = 0
-        let maxExplorations = 1000 // Limit to prevent hanging
+        let maxExplorations = 100 // Reduced from 1000 to prevent hanging
         
         func trySplit(_ remaining: String, _ current: [String], _ depth: Int = 0) {
             // Prevent infinite recursion and excessive exploration
-            if depth > 20 || exploredCount > maxExplorations {
+            if depth > 10 || exploredCount > maxExplorations { // Reduced depth from 20 to 10
                 return
             }
             
@@ -206,13 +266,13 @@ public struct MorseDecoder {
             }
             
             // Try patterns in order, but limit the number of attempts
-            for pattern in patterns.prefix(10) { // Only try first 10 patterns
+            for pattern in patterns.prefix(5) { // Reduced from 10 to 5 patterns
                 if remaining.hasPrefix(pattern) {
                     let newRemaining = String(remaining.dropFirst(pattern.count))
                     trySplit(newRemaining, current + [pattern], depth + 1)
                     
                     // Early exit if we've found a reasonable solution
-                    if bestResult != nil && current.count < 5 {
+                    if bestResult != nil && current.count < 3 { // Reduced from 5 to 3
                         return
                     }
                 }
@@ -222,6 +282,7 @@ public struct MorseDecoder {
         trySplit(morse, [])
         return bestResult
     }
+    */
     
     private func findGreedySplit(_ morse: String, _ patterns: [String]) -> [String]? {
         // Greedy approach for long sequences - much faster but less optimal
@@ -255,6 +316,7 @@ public struct MorseDecoder {
         return result
     }
     
+    /* COMPLEX SCORING ALGORITHM COMMENTED OUT - NO LONGER NEEDED
     private func evaluateSplit(_ patterns: [String]) -> Int {
         // Revolutionary scoring algorithm: No hard-coded words, pure mathematical intelligence
         
@@ -342,4 +404,5 @@ public struct MorseDecoder {
         
         return score
     }
+    */
 }
