@@ -18,6 +18,19 @@ public struct TextToMorseView: View {
     @State private var isPaused = false
     
     public init() {}
+    
+    // Computed property for text binding that prevents editing when disabled
+    private var inputTextBinding: Binding<String> {
+        Binding(
+            get: { inputText },
+            set: { newValue in
+                // Only allow changes when not playing or paused
+                if !isPlaying && !isPaused {
+                    inputText = newValue
+                }
+            }
+        )
+    }
 
     enum ConversionType {
         case textToMorse
@@ -40,18 +53,20 @@ public struct TextToMorseView: View {
                         }
                             .font(.headline)
                             .foregroundColor(.blue)
+                            .disabled(isPlaying || isPaused)
                         }
                         
-                        TextEditor(text: $inputText)
+                        TextEditor(text: inputTextBinding)
                             .font(AppFonts.primary())
                             .frame(height: 150)
                             .padding(16)
-                            .background(Color(.controlBackgroundColor))
+                            .background(isPlaying || isPaused ? Color(.disabledControlTextColor).opacity(0.1) : Color(.controlBackgroundColor))
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color(.separatorColor), lineWidth: 1)
+                                    .stroke(isPlaying || isPaused ? Color.orange : Color(.separatorColor), lineWidth: 1)
                             )
+                            .disabled(isPlaying || isPaused)
                         .onChange(of: inputText) { _, newValue in
                                 // Limit input length to prevent performance issues
                                 if newValue.count > maxInputLength {
@@ -65,8 +80,17 @@ public struct TextToMorseView: View {
                                 conversionType = detectConversionType(newValue)
                         }
                         
-                        // Character counter
+                        // Character counter and status
                         HStack {
+                            if isPlaying || isPaused {
+                                HStack(spacing: 4) {
+                                    Image(systemName: isPlaying ? "play.circle.fill" : "pause.circle.fill")
+                                        .foregroundColor(isPlaying ? .green : .orange)
+                                    Text(isPlaying ? "Playing - Input disabled" : "Paused - Input disabled")
+                                        .font(AppFonts.small())
+                                        .foregroundColor(isPlaying ? .green : .orange)
+                                }
+                            }
                             Spacer()
                             Text("\(inputText.count)/\(maxInputLength)")
                                 .font(AppFonts.small())
@@ -204,6 +228,12 @@ public struct TextToMorseView: View {
             Button("OK") { }
         } message: {
             Text(errorMessage)
+        }
+        .onReceive(morseModel.audioService.$isPlaying) { newIsPlaying in
+            isPlaying = newIsPlaying
+        }
+        .onReceive(morseModel.audioService.$isPaused) { newIsPaused in
+            isPaused = newIsPaused
         }
     }
     
@@ -580,7 +610,7 @@ public struct TextToMorseView: View {
         
         // Check if input contains mixed content
         if hasTextCharacters(limitedText) && hasMorseCharacters(limitedText) {
-            encodedMorse = try convertMixedContent(limitedText)
+            encodedMorse = try MixedContentConverter().convertMixedContent(limitedText)
         } else {
             encodedMorse = try MorseEncoder().encode(limitedText)
         }
@@ -634,107 +664,6 @@ public struct TextToMorseView: View {
         return result.joined(separator: " / ")
     }
     
-    private func convertMixedContent(_ text: String) throws -> String {
-        // SIMPLIFIED APPROACH: Only convert text to Morse, skip Morse to text conversion
-        // This avoids the complex decoding that was causing performance issues
-        
-        // For mixed content, just convert everything to Morse code
-        // This is much simpler and faster than trying to decode Morse back to text
-        return try MorseEncoder().encode(text)
-        
-        /* COMPLEX MIXED CONTENT PROCESSING COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
-        // Parse mixed content: convert text to Morse AND Morse to text
-        var result: [String] = []
-        var currentText = ""
-        var currentMorse = ""
-        
-        for char in text {
-            if char == "." || char == "-" || char == "/" {
-                // This is a Morse character
-                if !currentText.isEmpty {
-                    // Convert accumulated text to Morse
-                    let morseWord = try MorseEncoder().encode(currentText)
-                    result.append(morseWord)
-                    currentText = ""
-                }
-                currentMorse.append(char)
-            } else if char.isWhitespace {
-                // Handle whitespace
-                if !currentText.isEmpty {
-                    let morseWord = try MorseEncoder().encode(currentText)
-                    result.append(morseWord)
-                    currentText = ""
-                }
-                if !currentMorse.isEmpty {
-                    // Convert accumulated Morse to text
-                    let formattedMorse = formatMorseCode(currentMorse)
-                    let decodedText = try MorseDecoder().decode(formattedMorse)
-                    result.append(decodedText)
-                    currentMorse = ""
-                }
-            } else {
-                // This is a text character
-                if !currentMorse.isEmpty {
-                    // Convert accumulated Morse to text
-                    let formattedMorse = formatMorseCode(currentMorse)
-                    let decodedText = try MorseDecoder().decode(formattedMorse)
-                    result.append(decodedText)
-                    currentMorse = ""
-                }
-                currentText.append(char)
-            }
-        }
-        
-        // Handle any remaining content
-        if !currentText.isEmpty {
-            let morseWord = try MorseEncoder().encode(currentText)
-            result.append(morseWord)
-        }
-        if !currentMorse.isEmpty {
-            // Convert remaining Morse to text
-            let formattedMorse = formatMorseCode(currentMorse)
-            let decodedText = try MorseDecoder().decode(formattedMorse)
-            result.append(decodedText)
-        }
-        
-        return result.joined(separator: " / ")
-        */
-    }
-    
-    /* COMPLEX CHUNKED PROCESSING FUNCTION COMMENTED OUT - NO LONGER NEEDED
-    private func convertMixedContentChunked(_ text: String) throws -> String {
-        // Process large inputs in chunks to prevent hanging
-        let chunkSize = 200
-        var result: [String] = []
-        
-        // Split text into chunks by words to avoid breaking in the middle of words
-        let words = text.components(separatedBy: .whitespacesAndNewlines)
-        var currentChunk = ""
-        
-        for word in words {
-            if currentChunk.count + word.count > chunkSize && !currentChunk.isEmpty {
-                // Process current chunk
-                let chunkResult = try convertMixedContent(currentChunk)
-                result.append(chunkResult)
-                currentChunk = word
-            } else {
-                if !currentChunk.isEmpty {
-                    currentChunk += " "
-                }
-                currentChunk += word
-            }
-        }
-        
-        // Process remaining chunk
-        if !currentChunk.isEmpty {
-            let chunkResult = try convertMixedContent(currentChunk)
-            result.append(chunkResult)
-        }
-        
-        return result.joined(separator: " / ")
-    }
-    */
-    
     private func showError(_ message: String) {
         errorMessage = message
         showingError = true
@@ -749,8 +678,6 @@ public struct TextToMorseView: View {
         #endif
     }
 }
-
-// MARK: - MorseCodeVisualView
 
 struct MorseCodeVisualView: View {
     let morseCode: String

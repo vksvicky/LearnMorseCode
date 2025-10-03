@@ -95,6 +95,7 @@ public class AudioService: ObservableObject {
         
         playerNode.pause()
         pauseStartTime = Date()
+        isPlaying = false
         isPaused = true
         isElementPlaying = false
         
@@ -112,6 +113,7 @@ public class AudioService: ObservableObject {
         }
         
         playerNode.play()
+        isPlaying = true
         isPaused = false
         
         // Resume visual feedback from where we left off
@@ -326,6 +328,9 @@ public class AudioService: ObservableObject {
                 DispatchQueue.main.async {
                     self.currentCharacterIndex = -1
                     self.isElementPlaying = false
+                    // Reset playback state when Morse code finishes playing
+                    self.isPlaying = false
+                    self.isPaused = false
                 }
             }
         }
@@ -396,6 +401,9 @@ public class AudioService: ObservableObject {
                 DispatchQueue.main.async {
                     self.currentCharacterIndex = -1
                     self.isElementPlaying = false
+                    // Reset playback state when Morse code finishes playing
+                    self.isPlaying = false
+                    self.isPaused = false
                 }
             }
         }
