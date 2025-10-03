@@ -3,7 +3,7 @@ import MorseCore
 import LearnMorseUI
 
 // Global performance limits to prevent hanging
-private let MAX_INPUT_LENGTH = 500
+private let maxInputLength = 500
 
 public struct TextToMorseView: View {
     @EnvironmentObject private var morseModel: MorseCodeModel
@@ -52,8 +52,8 @@ public struct TextToMorseView: View {
                             )
                         .onChange(of: inputText) { _, newValue in
                                 // Limit input length to prevent performance issues
-                                if newValue.count > MAX_INPUT_LENGTH {
-                                    inputText = String(newValue.prefix(MAX_INPUT_LENGTH))
+                                if newValue.count > maxInputLength {
+                                    inputText = String(newValue.prefix(maxInputLength))
                                     return
                                 }
                                 
@@ -66,9 +66,9 @@ public struct TextToMorseView: View {
                         // Character counter
                         HStack {
                             Spacer()
-                            Text("\(inputText.count)/\(MAX_INPUT_LENGTH)")
+                            Text("\(inputText.count)/\(maxInputLength)")
                                 .font(AppFonts.small())
-                                .foregroundColor(inputText.count > Int(Double(MAX_INPUT_LENGTH) * 0.9) ? .red : .secondary)
+                                .foregroundColor(inputText.count > Int(Double(maxInputLength) * 0.9) ? .red : .secondary)
                         }
                         
                         // Helpful note about Morse code formatting
@@ -541,8 +541,8 @@ public struct TextToMorseView: View {
     
     private func convertToMorse(_ text: String) throws -> String {
         // PERFORMANCE LIMIT: Prevent extremely long inputs from causing hangs
-        let limitedText = text.count > MAX_INPUT_LENGTH ? 
-            String(text.prefix(MAX_INPUT_LENGTH)) + "..." : text
+        let limitedText = text.count > maxInputLength ? 
+            String(text.prefix(maxInputLength)) + "..." : text
         
         let encodedMorse: String
         
@@ -716,31 +716,23 @@ struct MorseCodeVisualView: View {
     @ObservedObject var audioService: AudioService
     
     var body: some View {
-        Text(morseCode)
-            .font(AppFonts.large(weight: .bold))
-            .foregroundColor(.primary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(
-                // Overlay for visual feedback highlighting - only for dots and dashes
-                HStack(alignment: .top, spacing: 0) {
-                    ForEach(Array(morseCode.enumerated()), id: \.offset) { index, character in
-                        if character == "." || character == "-" {
-                            let visualIndex = getVisualIndex(for: index)
-                            Rectangle()
-                                .fill(backgroundColor(for: index))
-                                .frame(width: 14, height: 24) // Approximate character width
-                                .opacity(visualIndex == audioService.currentCharacterIndex ? 1.0 : 0.0)
-                                .animation(.easeInOut(duration: 0.1), value: audioService.currentCharacterIndex)
-                        } else {
-                            // For spaces, slashes, and other characters - no highlighting
-                            Rectangle()
-                                .fill(Color.clear)
-                                .frame(width: character == " " ? 8 : 12, height: 24)
-                        }
-                    }
-                }
-                .allowsHitTesting(false)
-            )
+        HStack(alignment: .top, spacing: 0) {
+            ForEach(Array(morseCode.enumerated()), id: \.offset) { index, character in
+                Text(String(character))
+                    .font(AppFonts.large(weight: .bold))
+                    .foregroundColor(textColor(for: index))
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(backgroundColor(for: index))
+                            .padding(.horizontal, -2)
+                            .padding(.vertical, -4)
+                    )
+                    .scaleEffect(scaleEffect(for: index))
+                    .animation(.easeInOut(duration: 0.1), value: audioService.currentCharacterIndex)
+                    .animation(.easeInOut(duration: 0.1), value: audioService.isElementPlaying)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private func textColor(for index: Int) -> Color {
@@ -752,7 +744,7 @@ struct MorseCodeVisualView: View {
         if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
             return .white
         } else if visualIndex == audioService.currentCharacterIndex {
-            return .primary
+            return .white
         } else {
             return .primary
         }
@@ -767,7 +759,7 @@ struct MorseCodeVisualView: View {
         if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
             return .blue
         } else if visualIndex == audioService.currentCharacterIndex {
-            return .blue.opacity(0.3)
+            return .blue.opacity(0.5)
         } else {
             return .clear
         }
@@ -780,7 +772,7 @@ struct MorseCodeVisualView: View {
         
         let visualIndex = getVisualIndex(for: index)
         if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
-            return 1.2
+            return 1.3
         } else if visualIndex == audioService.currentCharacterIndex {
             return 1.1
         } else {
@@ -790,8 +782,8 @@ struct MorseCodeVisualView: View {
     
     private func getVisualIndex(for stringIndex: Int) -> Int {
         var visualIndex = 0
-        for i in 0..<stringIndex {
-            let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: i)]
+        for index in 0..<stringIndex {
+            let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
             if character == "." || character == "-" {
                 visualIndex += 1
             }
