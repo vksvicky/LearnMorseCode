@@ -716,78 +716,32 @@ struct MorseCodeVisualView: View {
     @ObservedObject var audioService: AudioService
     
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
-            ForEach(Array(morseCode.enumerated()), id: \.offset) { index, character in
-                Text(String(character))
-                    .font(AppFonts.large(weight: .bold))
-                    .foregroundColor(textColor(for: index))
-                    .background(
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(backgroundColor(for: index))
-                            .padding(.horizontal, -2)
-                            .padding(.vertical, -4)
-                    )
-                    .scaleEffect(scaleEffect(for: index))
-                    .animation(.easeInOut(duration: 0.1), value: audioService.currentCharacterIndex)
-                    .animation(.easeInOut(duration: 0.1), value: audioService.isElementPlaying)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Text(highlightedMorseCode)
+            .font(AppFonts.primary())
+            .foregroundColor(.primary)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private func textColor(for index: Int) -> Color {
-        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
-        // Only highlight dots and dashes, not spaces
-        guard character == "." || character == "-" else { return .primary }
+    private var highlightedMorseCode: AttributedString {
+        var attributedString = AttributedString(morseCode)
         
-        let visualIndex = getVisualIndex(for: index)
-        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
-            return .white
-        } else if visualIndex == audioService.currentCharacterIndex {
-            return .white
-        } else {
-            return .primary
-        }
-    }
-    
-    private func backgroundColor(for index: Int) -> Color {
-        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
-        // Only highlight dots and dashes, not spaces
-        guard character == "." || character == "-" else { return .clear }
-        
-        let visualIndex = getVisualIndex(for: index)
-        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
-            return .blue
-        } else if visualIndex == audioService.currentCharacterIndex {
-            return .blue.opacity(0.5)
-        } else {
-            return .clear
-        }
-    }
-    
-    private func scaleEffect(for index: Int) -> CGFloat {
-        let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
-        // Only scale dots and dashes, not spaces
-        guard character == "." || character == "-" else { return 1.0 }
-        
-        let visualIndex = getVisualIndex(for: index)
-        if visualIndex == audioService.currentCharacterIndex && audioService.isElementPlaying {
-            return 1.3
-        } else if visualIndex == audioService.currentCharacterIndex {
-            return 1.1
-        } else {
-            return 1.0
-        }
-    }
-    
-    private func getVisualIndex(for stringIndex: Int) -> Int {
+        // Find all dots and dashes and highlight the current one
         var visualIndex = 0
-        for index in 0..<stringIndex {
-            let character = morseCode[morseCode.index(morseCode.startIndex, offsetBy: index)]
+        for (index, character) in morseCode.enumerated() {
             if character == "." || character == "-" {
+                if visualIndex == audioService.currentCharacterIndex {
+                    let startIndex = attributedString.index(attributedString.startIndex, offsetByCharacters: index)
+                    let endIndex = attributedString.index(startIndex, offsetByCharacters: 1)
+                    let range = startIndex..<endIndex
+                    
+                    attributedString[range].backgroundColor = .blue
+                    attributedString[range].foregroundColor = .white
+                }
                 visualIndex += 1
             }
         }
-        return visualIndex
+        
+        return attributedString
     }
+    
 }
