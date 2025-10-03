@@ -527,12 +527,15 @@ public struct TextToMorseView: View {
             case .textToMorse:
                 outputText = try convertToMorse(textToProcess)
             case .morseToText:
-                // SIMPLIFIED: Skip complex Morse to text conversion to avoid hanging
-                // Just show a message that this feature is temporarily disabled
-                outputText = "Morse to text conversion temporarily disabled to improve performance"
+                outputText = try convertToText(textToProcess)
             case .auto:
-                // SIMPLIFIED: Always convert to Morse to avoid complex decoding
-                outputText = try convertToMorse(textToProcess)
+                // Auto-detect and convert appropriately
+                let detectedType = detectConversionType(textToProcess)
+                if detectedType == .textToMorse {
+                    outputText = try convertToMorse(textToProcess)
+                } else {
+                    outputText = try convertToText(textToProcess)
+                }
                 
                 /* COMPLEX AUTO-DETECTION COMMENTED OUT - WAS CAUSING PERFORMANCE ISSUES
                 // Try to auto-detect and convert
@@ -584,6 +587,15 @@ public struct TextToMorseView: View {
         
         // Return the encoded Morse code directly (already properly spaced)
         return encodedMorse
+    }
+    
+    private func convertToText(_ morse: String) throws -> String {
+        // PERFORMANCE LIMIT: Prevent extremely long inputs from causing hangs
+        let limitedMorse = morse.count > maxInputLength ? 
+            String(morse.prefix(maxInputLength)) + "..." : morse
+        
+        // Use the MorseDecoder to convert Morse code to text
+        return try MorseDecoder().decode(limitedMorse)
     }
     
     private func formatMorseForAudio(_ morse: String) -> String {
