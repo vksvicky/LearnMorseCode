@@ -8,17 +8,14 @@ final class TextToMorseViewTests: XCTestCase {
     // MARK: - Test Setup
     
     private var audioService: AudioService!
-    private var morseModel: MorseCodeModel!
     
     override func setUp() {
         super.setUp()
         audioService = AudioService()
-        morseModel = MorseCodeModel()
     }
     
     override func tearDown() {
         audioService = nil
-        morseModel = nil
         super.tearDown()
     }
     

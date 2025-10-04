@@ -9,19 +9,16 @@ final class VoiceToMorseViewTests: XCTestCase {
     
     // MARK: - Test Setup
     
-    private var morseModel: MorseCodeModel!
     private var mockPermissionManager: MockPermissionManager!
     private var mockAudioDeviceManager: MockAudioDeviceManager!
     
     override func setUp() {
         super.setUp()
-        morseModel = MorseCodeModel()
         mockPermissionManager = MockPermissionManager()
         mockAudioDeviceManager = MockAudioDeviceManager()
     }
     
     override func tearDown() {
-        morseModel = nil
         mockPermissionManager = nil
         mockAudioDeviceManager = nil
         super.tearDown()

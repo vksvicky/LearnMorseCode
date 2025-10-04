@@ -11,6 +11,7 @@ final class MorseCodeModelTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testTextToMorse_usesInjectedEncoder() {
         let mock = MockEncoder()
         mock.result = "... --- ..."
@@ -20,6 +21,7 @@ final class MorseCodeModelTests: XCTestCase {
         XCTAssertEqual(mock.lastInput, "SOS")
     }
 
+    @MainActor
     func testTextToMorse_emptyInput() {
         let mock = MockEncoder()
         mock.result = ""

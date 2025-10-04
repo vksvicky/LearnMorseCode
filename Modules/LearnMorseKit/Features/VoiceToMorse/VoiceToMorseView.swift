@@ -642,19 +642,16 @@ public struct VoiceToMorseView: View {
              // Check available audio devices (macOS)
              #if os(macOS)
              print("🔍 Available input devices:")
-             let audioEngine = self.audioEngine
-             let inputNode = audioEngine.inputNode
-                 print("   - Input node: \(inputNode)")
-                 print("   - Number of inputs: \(inputNode.numberOfInputs)")
-                 for i in 0..<inputNode.numberOfInputs {
-                     let format = inputNode.outputFormat(forBus: i)
-                     print("   - Bus \(i): \(format)")
-                 }
+             print("   - Input node: \(inputNode)")
+             print("   - Number of inputs: \(inputNode.numberOfInputs)")
+             for i in 0..<inputNode.numberOfInputs {
+                 let format = inputNode.outputFormat(forBus: i)
+                 print("   - Bus \(i): \(format)")
              }
+             #endif
              
              // Audio device selection is now handled by the UI dropdown
              print("🎤 Using selected audio device: \(selectedAudioInput?.name ?? "Default")")
-             #endif
             
             // Install tap with native format and standard buffer
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, time in
