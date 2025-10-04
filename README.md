@@ -218,15 +218,31 @@ LearnMorseKit/
 
 ### Using Build Scripts
 
-The project includes convenient build scripts:
+The project includes convenient build scripts in the `Scripts/` folder:
 
 ```bash
 # Debug build and run
-./build_and_run.sh
+./Scripts/build_and_run.sh
 
 # Release build and run
-./build_and_run_release.sh
+./Scripts/build_and_run_release.sh
+
+# Debug build with detailed output
+./Scripts/build_and_debug.sh
+
+# Run tests with coverage report
+./Scripts/run_tests_with_coverage.sh
 ```
+
+#### Available Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `build_and_run.sh` | Quick debug build and run | `./Scripts/build_and_run.sh` |
+| `build_and_run_release.sh` | Release build and run | `./Scripts/build_and_run_release.sh` |
+| `build_and_debug.sh` | Debug build with verbose output | `./Scripts/build_and_debug.sh` |
+| `run_tests_with_coverage.sh` | Run tests and generate coverage | `./Scripts/run_tests_with_coverage.sh` |
+| `grant_permissions_manual.sh` | Help with permission setup | `./Scripts/grant_permissions_manual.sh` |
 
 ## Usage
 
@@ -263,14 +279,25 @@ LearnMorseCode/
 ├── LearnMorseCodeUITests/   # UI tests
 ├── Modules/                 # Swift Package modules
 │   └── LearnMorseKit/       # Core package
-└── Scripts/                 # Build and utility scripts
+│       ├── Features/        # Feature modules
+│       ├── MorseCore/       # Core Morse code logic
+│       └── LearnMorseUI/    # Shared UI components
+├── Scripts/                 # Build and utility scripts
+│   ├── build_and_run.sh     # Quick debug build
+│   ├── build_and_run_release.sh # Release build
+│   ├── build_and_debug.sh   # Debug build with verbose output
+│   ├── run_tests_with_coverage.sh # Test runner with coverage
+│   └── grant_permissions_manual.sh # Permission setup helper
+├── Docs/                    # Documentation
+│   └── setup_xcode_signing.md # Code signing guide
+└── Tests/                   # Performance and integration tests
 ```
 
 ### Running Tests
 
 ```bash
 # Run all tests with coverage
-./run_tests_with_coverage.sh
+./Scripts/run_tests_with_coverage.sh
 
 # Run specific test suites
 swift test --package-path Modules/LearnMorseKit
@@ -282,6 +309,223 @@ swift test --package-path Modules/LearnMorseKit
 - **Services**: Audio and external service integrations in `MorseCore/Services/`
 - **Views**: SwiftUI views organized by feature in `Features/`
 - **UI Components**: Reusable components in `LearnMorseUI/`
+
+## Troubleshooting
+
+### Microphone and Speech Recognition Issues
+
+The Voice → Morse feature requires microphone and speech recognition permissions. If you're experiencing issues, follow these troubleshooting steps:
+
+#### 🔧 **Issue: App Crashes on Voice → Morse Tab**
+
+**Symptoms**: App crashes immediately when accessing Voice → Morse tab with error about missing usage descriptions.
+
+**Solution**:
+1. **Open the project in Xcode**:
+   ```bash
+   open LearnMorseCode.xcodeproj
+   ```
+
+2. **Add Privacy Usage Descriptions**:
+   - Select the **LearnMorseCode** project (top item in navigator)
+   - Select the **LearnMorseCode** target
+   - Go to **Build Settings** tab
+   - Search for `infoplist`
+   - Under **Info.plist Values**, add these keys:
+     - **Key**: `Privacy - Microphone Usage Description`
+       **Value**: `This app uses the microphone to record your voice for speech recognition and Morse code learning.`
+     - **Key**: `Privacy - Speech Recognition Usage Description`
+       **Value**: `This app uses speech recognition to convert your voice to text, which is then translated to Morse code for learning purposes.`
+
+3. **Clean and rebuild**:
+   ```bash
+   # In Xcode: Product → Clean Build Folder (Cmd+Shift+K)
+   # Then build and run again (Cmd+R)
+   ```
+
+#### 🔧 **Issue: App Not Listed in System Settings**
+
+**Symptoms**: App doesn't appear in System Settings → Privacy & Security → Microphone or Speech Recognition.
+
+**Root Cause**: App is signed with "adhoc" signature instead of proper developer certificate.
+
+**Solution**:
+1. **Set up Code Signing in Xcode** (Recommended):
+   - Follow the detailed guide: [Code Signing Setup Guide](Docs/setup_xcode_signing.md)
+   - Open project in Xcode
+   - Select **LearnMorseCode** target
+   - Go to **Signing & Capabilities** tab
+   - ✅ Check **"Automatically manage signing"**
+   - Select your **Apple ID** in the Team dropdown
+   - If you don't see your Apple ID, click **"Add Account..."** and sign in
+
+2. **Quick Helper Script**:
+   ```bash
+   ./Scripts/grant_permissions_manual.sh
+   ```
+   This script will open System Settings to the microphone section and provide guidance.
+
+3. **Clean and rebuild**:
+   ```bash
+   # In Xcode: Product → Clean Build Folder (Cmd+Shift+K)
+   # Then build and run again (Cmd+R)
+   ```
+
+3. **Verify in System Settings**:
+   - Go to **System Settings** → **Privacy & Security** → **Microphone**
+   - You should now see **"LearnMorseCode"** in the list
+   - Toggle the switch **ON** to grant permission
+   - Repeat for **Speech Recognition** if it's a separate entry
+
+#### 🔧 **Issue: "No Speech Detected" Error**
+
+**Symptoms**: App starts recording but shows "No speech detected" even when speaking.
+
+**Diagnostic Steps**:
+1. **Check Microphone Hardware**:
+   ```bash
+   # Test with QuickTime Player
+   # Open QuickTime Player → File → New Audio Recording
+   # Click record and speak - you should see audio levels
+   ```
+
+2. **Check System Input Levels**:
+   - Go to **System Settings** → **Sound** → **Input**
+   - Speak and verify the input level meter moves
+   - Ensure input volume is not muted
+
+3. **Check App Permissions**:
+   - Go to **System Settings** → **Privacy & Security** → **Microphone**
+   - Verify **LearnMorseCode** is listed and enabled
+   - Go to **System Settings** → **Privacy & Security** → **Speech Recognition**
+   - Verify **LearnMorseCode** is listed and enabled
+
+4. **Test with Different Audio Devices**:
+   - In the app, try selecting different audio input devices from the dropdown
+   - Test with both built-in microphone and any external microphones
+
+#### 🔧 **Issue: Volume Level Always Shows 0%**
+
+**Symptoms**: Volume level indicator in the app always shows 0% even when speaking.
+
+**Possible Causes & Solutions**:
+
+1. **Wrong Audio Device Selected**:
+   - Check the audio device dropdown in the app
+   - Try selecting different devices (Built-in Microphone, External Microphone, etc.)
+   - Test each device by speaking
+
+2. **Microphone Permissions Not Granted**:
+   - Follow the "App Not Listed in System Settings" solution above
+   - Ensure proper code signing is set up
+
+3. **Audio Device Hardware Issue**:
+   - Test microphone with other apps (QuickTime, FaceTime, etc.)
+   - Check if microphone works with Siri
+   - Try unplugging and reconnecting external microphones
+
+#### 🔧 **Issue: Speech Recognition Not Working**
+
+**Symptoms**: Microphone works but speech is not being recognized or converted to text.
+
+**Solutions**:
+1. **Check Speech Recognition Permissions**:
+   - Go to **System Settings** → **Privacy & Security** → **Speech Recognition**
+   - Ensure **LearnMorseCode** is listed and enabled
+
+2. **Test Speech Recognition System-Wide**:
+   - Try using **Dictation** in any text field (press Fn twice)
+   - If system dictation doesn't work, there may be a system-level issue
+
+3. **Check Internet Connection**:
+   - Speech recognition may require internet connection for some features
+   - Ensure you have a stable internet connection
+
+4. **Restart the App**:
+   - Quit the app completely
+   - Reopen and try again
+
+#### 🔧 **Issue: Audio Device Dropdown is Empty**
+
+**Symptoms**: The audio device selection dropdown shows no options.
+
+**Solution**:
+1. **Restart the App**:
+   - Quit the app completely
+   - Reopen and navigate to Voice → Morse tab
+   - The dropdown should populate with available devices
+
+2. **Check Audio System**:
+   - Go to **System Settings** → **Sound** → **Input**
+   - Verify that input devices are detected by the system
+
+#### 🔧 **Issue: App Shows Generic Device Names**
+
+**Symptoms**: Dropdown shows "Default Input Device", "Built-in Microphone" instead of actual device names.
+
+**Note**: This is expected behavior. The app uses generic device names that work across different Mac models to ensure compatibility.
+
+**Verification**:
+- The generic names still correspond to your actual hardware
+- "Built-in Microphone" = your Mac's internal microphone
+- "External Microphone" = any connected external microphones
+- "Default Input Device" = system's current default input
+
+#### 🔧 **Advanced Troubleshooting**
+
+If the above steps don't resolve the issue:
+
+1. **Reset Privacy Permissions**:
+   ```bash
+   # Reset all privacy permissions (use with caution)
+   sudo tccutil reset All com.your-bundle-id.LearnMorseCode
+   ```
+
+2. **Check Console Logs**:
+   - Open **Console.app**
+   - Filter for "LearnMorseCode"
+   - Look for error messages related to audio or speech recognition
+
+3. **Test with Minimal Setup**:
+   - Disconnect all external audio devices
+   - Use only the built-in microphone
+   - Test in a quiet environment
+
+4. **System Requirements Check**:
+   - Ensure macOS 14.0 or later
+   - Check that you have sufficient disk space
+   - Verify system audio is working properly
+
+#### 🔧 **Development-Specific Issues**
+
+If you're developing the app:
+
+1. **Code Signing Issues**:
+   - Ensure you're using a valid Apple Developer certificate
+   - Check that the bundle identifier matches your provisioning profile
+   - Verify that the app is not running in "adhoc" mode
+
+2. **Build Configuration**:
+   - Ensure privacy usage descriptions are properly set in build settings
+   - Check that the app target includes required frameworks (AVFoundation, Speech)
+
+3. **Testing on Different Machines**:
+   - Test on different Mac models to ensure compatibility
+   - Verify that the app works with different audio hardware configurations
+
+### Getting Help
+
+If you continue to experience issues:
+
+1. **Check the Console**: Look for error messages in Console.app
+2. **Test with Other Apps**: Verify that your microphone works with other applications
+3. **System Updates**: Ensure your macOS is up to date
+4. **Report Issues**: Open an issue on GitHub with:
+   - macOS version
+   - Mac model
+   - Steps to reproduce
+   - Console error messages (if any)
+   - Screenshots of System Settings permissions
 
 ## Roadmap
 

@@ -61,6 +61,10 @@ xcodebuild clean \
     -scheme "$SCHEME_NAME" \
     -configuration Debug \
     -derivedDataPath "$DERIVED_DATA_DIR" \
+    CODE_SIGNING_ALLOWED=YES \
+    CODE_SIGN_STYLE=Automatic \
+    INFOPLIST_KEY_NSSpeechRecognitionUsageDescription="This app uses speech recognition to convert your voice to text, which is then translated to Morse code for learning purposes." \
+    INFOPLIST_KEY_NSMicrophoneUsageDescription="This app uses the microphone to record your voice for speech recognition and Morse code learning." \
     -quiet
 
 print_success "Clean completed"
@@ -73,6 +77,10 @@ xcodebuild build \
     -configuration Debug \
     -derivedDataPath "$DERIVED_DATA_DIR" \
     -destination "platform=macOS" \
+    CODE_SIGNING_ALLOWED=YES \
+    CODE_SIGN_STYLE=Automatic \
+    INFOPLIST_KEY_NSSpeechRecognitionUsageDescription="This app uses speech recognition to convert your voice to text, which is then translated to Morse code for learning purposes." \
+    INFOPLIST_KEY_NSMicrophoneUsageDescription="This app uses the microphone to record your voice for speech recognition and Morse code learning." \
     -quiet
 
 if [ $? -eq 0 ]; then
