@@ -2,10 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app uses speech recognition to convert your voice to text, which is then translated to Morse code for learning purposes.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app uses the microphone to record your voice for speech recognition and Morse code learning.</string>
+	<key>ATSApplicationFontsPath</key>
+	<string>Assets/Fonts</string>
 	<key>CFBundleDisplayName</key>
 	<string>Learn Morse Code</string>
 	<key>CFBundleIdentifier</key>
@@ -13,18 +11,20 @@
 	<key>CFBundleName</key>
 	<string>LearnMorseCode</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>10.2025</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>04.21</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app uses the microphone to record your voice for speech recognition and Morse code learning.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app uses speech recognition to convert your voice to text, which is then translated to Morse code for learning purposes.</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
-	<key>ATSApplicationFontsPath</key>
-	<string>Assets/Fonts</string>
 </dict>
 </plist>

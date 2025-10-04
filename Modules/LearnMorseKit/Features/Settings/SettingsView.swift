@@ -7,6 +7,15 @@ public struct SettingsView: View {
     
     public init() {}
     
+    // Computed properties to read version from Info.plist
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    }
+    
+    private var appBuildNumber: String {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+    }
+    
     public var body: some View {
         NavigationView {
             Form {
@@ -88,14 +97,14 @@ public struct SettingsView: View {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text(appVersion)
                             .foregroundColor(.secondary)
                     }
                     
                     HStack {
                         Text("Build")
                         Spacer()
-                        Text("1")
+                        Text(appBuildNumber)
                             .foregroundColor(.secondary)
                     }
                 }

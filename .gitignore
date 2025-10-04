@@ -101,3 +101,7 @@ Modules/CoverageReport/*
 .vscode/*
 
 .trunk/*
+Packages/
+
+# Build tracking file for auto-versioning
+.build_tracking

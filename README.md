@@ -218,31 +218,69 @@ LearnMorseKit/
 
 ### Using Build Scripts
 
-The project includes convenient build scripts in the `Scripts/` folder:
+The project includes a universal build script in the `Scripts/` folder:
 
 ```bash
-# Debug build and run
-./Scripts/build_and_run.sh
+# Debug build and run (default) - auto-increments build number
+./Scripts/build.sh
 
-# Release build and run
-./Scripts/build_and_run_release.sh
+# Release build and run - auto-increments build number
+./Scripts/build.sh release
 
-# Debug build with detailed output
-./Scripts/build_and_debug.sh
+# Build and run app - auto-increments build number
+./Scripts/build.sh run
 
-# Run tests with coverage report
-./Scripts/run_tests_with_coverage.sh
+# Run tests with coverage
+./Scripts/build.sh test
+
+# Build Universal + Silicon distribution packages - uses current tested version
+./Scripts/build.sh packages
+
+# Build packages with specific version (version parameters ignored - uses current tested version)
+./Scripts/build.sh packages --version 10.2025
+
+# Build packages with specific version and build number (version parameters ignored - uses current tested version)
+./Scripts/build.sh packages --version 10.2025 --build 04.8
+
+# Build packages with auto-generated version (auto-version ignored - uses current tested version)
+./Scripts/build.sh packages --auto-version
+
+# Clean build artifacts
+./Scripts/build.sh clean
 ```
 
 #### Available Scripts
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| `build_and_run.sh` | Quick debug build and run | `./Scripts/build_and_run.sh` |
-| `build_and_run_release.sh` | Release build and run | `./Scripts/build_and_run_release.sh` |
-| `build_and_debug.sh` | Debug build with verbose output | `./Scripts/build_and_debug.sh` |
-| `run_tests_with_coverage.sh` | Run tests and generate coverage | `./Scripts/run_tests_with_coverage.sh` |
+| `build.sh` | Universal build script | `./Scripts/build.sh [option]` |
 | `grant_permissions_manual.sh` | Help with permission setup | `./Scripts/grant_permissions_manual.sh` |
+
+#### Build Script Options
+
+| Option | Purpose | Description |
+|--------|---------|-------------|
+| `debug` (default) | Debug build and run | Builds and launches debug version |
+| `release` | Release build and run | Builds and launches optimized version |
+| `test` | Run tests | Executes test suite with coverage |
+| `packages` | Build distribution | Creates DMG/ZIP packages for distribution |
+| `clean` | Clean artifacts | Removes all build artifacts |
+| `help` | Show help | Displays usage information |
+
+#### Version Parameters
+
+| Parameter | Purpose | Example |
+|-----------|---------|---------|
+| `--version VERSION` | Set version number | `--version 10.2025` |
+| `--build BUILD_NUMBER` | Set build number | `--build 04.8` |
+| `--auto-version` | Auto-generate version | `--auto-version` |
+
+**Default Values**: Version 1.0.0, Build 1
+
+**Auto-Versioning Format**:
+- Version: `month.year` (e.g., `10.2025` for October 2025)
+- Build: `day.build_number` (e.g., `04.8` for day 04, build 8)
+- Build number increments throughout the day, resets to 1 on new day
 
 ## Usage
 
@@ -283,10 +321,7 @@ LearnMorseCode/
 │       ├── MorseCore/       # Core Morse code logic
 │       └── LearnMorseUI/    # Shared UI components
 ├── Scripts/                 # Build and utility scripts
-│   ├── build_and_run.sh     # Quick debug build
-│   ├── build_and_run_release.sh # Release build
-│   ├── build_and_debug.sh   # Debug build with verbose output
-│   ├── run_tests_with_coverage.sh # Test runner with coverage
+│   ├── build.sh             # Universal build script
 │   └── grant_permissions_manual.sh # Permission setup helper
 ├── Docs/                    # Documentation
 │   └── setup_xcode_signing.md # Code signing guide
@@ -297,7 +332,7 @@ LearnMorseCode/
 
 ```bash
 # Run all tests with coverage
-./Scripts/run_tests_with_coverage.sh
+./Scripts/build.sh test
 
 # Run specific test suites
 swift test --package-path Modules/LearnMorseKit
