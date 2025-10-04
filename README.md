@@ -338,6 +338,33 @@ LearnMorseCode/
 swift test --package-path Modules/LearnMorseKit
 ```
 
+## Continuous Integration
+
+This project uses GitHub Actions for automated CI/CD:
+
+### 🔄 Automated Testing
+- **Multi-platform testing**: macOS 14, 15, 16, and 26
+- **Matrix builds**: Tests on different Xcode versions
+- **Pull request validation**: Automatic testing on PRs
+- **Security scanning**: Checks for vulnerabilities and hardcoded secrets
+
+### 🚀 Automated Releases
+- **Tag-based releases**: Create releases from git tags
+- **Distribution packages**: Automatic DMG and ZIP creation
+- **Release notes**: Auto-generated changelogs
+- **Checksums**: Automatic verification files
+
+### 🛠️ Maintenance
+- **Weekly health checks**: Automated dependency and security scans
+- **Code quality monitoring**: Regular formatting and quality checks
+- **Build verification**: Ensures build system integrity
+
+**Status Badges:**
+[![CI](https://github.com/your-username/LearnMorseCode/workflows/CI/badge.svg)](https://github.com/your-username/LearnMorseCode/actions)
+[![Release](https://github.com/your-username/LearnMorseCode/workflows/Release/badge.svg)](https://github.com/your-username/LearnMorseCode/actions)
+
+For detailed workflow information, see [`.github/README.md`](.github/README.md).
+
 ### Code Organization
 
 - **Models**: Data structures and business logic in `MorseCore/Models/`

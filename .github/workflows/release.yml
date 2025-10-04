@@ -1,0 +1,224 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 10.2025)'
+        required: true
+        type: string
+      build_number:
+        description: 'Build number (e.g., 04.18)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: macos-26
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set version variables
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          echo "build_number=${{ github.event.inputs.build_number }}" >> $GITHUB_OUTPUT
+          echo "tag=v${{ github.event.inputs.version }}-${{ github.event.inputs.build_number }}" >> $GITHUB_OUTPUT
+        else
+          # Extract from tag
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=1" >> $GITHUB_OUTPUT
+          echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        release_name: LearnMorseCode ${{ steps.version.outputs.version }} (${{ steps.version.outputs.build_number }})
+        body: |
+          ## LearnMorseCode ${{ steps.version.outputs.version }} (${{ steps.version.outputs.build_number }})
+          
+          ### Features
+          - Text to Morse Code conversion with audio playback
+          - Voice to Morse Code conversion with speech recognition
+          - Interactive Morse Code learning game
+          - Morse Code reference guide
+          - Visual feedback synchronized with audio
+          
+          ### System Requirements
+          - macOS 14.0 or later
+          - Microphone access (for Voice to Morse feature)
+          - Speech recognition permission (for Voice to Morse feature)
+          
+          ### Installation
+          1. Download the appropriate package for your Mac:
+             - **Universal**: Works on both Intel and Apple Silicon Macs
+             - **Silicon**: Optimized for Apple Silicon Macs only
+          2. Open the downloaded DMG file
+          3. Drag LearnMorseCode to your Applications folder
+          4. Launch the app and grant necessary permissions
+          
+          ### What's New
+          - Enhanced audio playback controls with pause/resume functionality
+          - Improved mixed content parsing (Morse code + text)
+          - Better visual feedback synchronization
+          - Comprehensive test coverage
+          - Robust build and versioning system
+          
+          ### Troubleshooting
+          If you encounter issues with microphone or speech recognition:
+          1. Go to System Settings > Privacy & Security > Microphone
+          2. Ensure LearnMorseCode is listed and enabled
+          3. For speech recognition, check System Settings > Privacy & Security > Speech Recognition
+          
+          ### Checksums
+          See the attached CHECKSUMS file for verification.
+        draft: false
+        prerelease: false
+
+  build-packages:
+    name: Build Distribution Packages
+    runs-on: macos-26
+    needs: create-release
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_17.0.app/Contents/Developer
+
+    - name: Cache Swift Package Manager dependencies
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Cache Xcode DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+
+    - name: Install dependencies
+      run: |
+        brew install create-dmg
+
+    - name: Set version variables
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          echo "build_number=${{ github.event.inputs.build_number }}" >> $GITHUB_OUTPUT
+        else
+          # Extract from tag
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=1" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Build packages with specific version
+      run: |
+        ./Scripts/build.sh packages --version ${{ steps.version.outputs.version }} --build ${{ steps.version.outputs.build_number }}
+
+    - name: Upload Universal DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/LearnMorseCode-Universal-v${{ steps.version.outputs.version }}.dmg
+        asset_name: LearnMorseCode-Universal-v${{ steps.version.outputs.version }}.dmg
+        asset_content_type: application/octet-stream
+
+    - name: Upload Silicon DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/LearnMorseCode-Silicon-v${{ steps.version.outputs.version }}.dmg
+        asset_name: LearnMorseCode-Silicon-v${{ steps.version.outputs.version }}.dmg
+        asset_content_type: application/octet-stream
+
+    - name: Upload Universal ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/LearnMorseCode-Universal-v${{ steps.version.outputs.version }}.zip
+        asset_name: LearnMorseCode-Universal-v${{ steps.version.outputs.version }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Silicon ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/LearnMorseCode-Silicon-v${{ steps.version.outputs.version }}.zip
+        asset_name: LearnMorseCode-Silicon-v${{ steps.version.outputs.version }}.zip
+        asset_content_type: application/zip
+
+    - name: Upload Release Notes
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/RELEASE_NOTES_v${{ steps.version.outputs.version }}.md
+        asset_name: RELEASE_NOTES_v${{ steps.version.outputs.version }}.md
+        asset_content_type: text/markdown
+
+    - name: Upload Checksums
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: Packages/CHECKSUMS_v${{ steps.version.outputs.version }}.txt
+        asset_name: CHECKSUMS_v${{ steps.version.outputs.version }}.txt
+        asset_content_type: text/plain
+
+  notify-release:
+    name: Notify Release
+    runs-on: macos-26
+    needs: [create-release, build-packages]
+    if: always()
+
+    steps:
+    - name: Notify success
+      if: ${{ needs.create-release.result == 'success' && needs.build-packages.result == 'success' }}
+      run: |
+        echo "🎉 Release created successfully!"
+        echo "Version: ${{ github.event.inputs.version || github.ref_name }}"
+        echo "Build: ${{ github.event.inputs.build_number || '1' }}"
+
+    - name: Notify failure
+      if: ${{ needs.create-release.result == 'failure' || needs.build-packages.result == 'failure' }}
+      run: |
+        echo "❌ Release failed!"
+        echo "Create Release: ${{ needs.create-release.result }}"
+        echo "Build Packages: ${{ needs.build-packages.result }}"
+        exit 1

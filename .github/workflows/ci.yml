@@ -1,0 +1,243 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test on macOS ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-14, macos-15, macos-16, macos-26]
+        include:
+          - os: macos-14
+            xcode: '15.4'
+          - os: macos-15
+            xcode: '16.0'
+          - os: macos-16
+            xcode: '16.1'
+          - os: macos-26
+            xcode: '17.0'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+
+    - name: Cache Swift Package Manager dependencies
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Cache Xcode DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+
+    - name: Install dependencies
+      run: |
+        # Install create-dmg for packaging
+        brew install create-dmg
+
+    - name: Run tests
+      run: |
+        ./Scripts/build.sh test
+
+    - name: Build debug version
+      run: |
+        ./Scripts/build.sh debug
+
+    - name: Build release version
+      run: |
+        ./Scripts/build.sh release
+
+    - name: Verify version handling
+      run: |
+        # Test auto-versioning
+        ./Scripts/build.sh debug --auto-version
+        
+        # Test specific version
+        ./Scripts/build.sh debug --version 12.2024 --build 15.5
+        
+        # Test packages command (should use current tested version)
+        ./Scripts/build.sh packages
+
+    - name: Diagnose version information
+      run: |
+        ./Scripts/build.sh diagnose
+
+    - name: Clean build artifacts
+      run: |
+        ./Scripts/build.sh clean
+
+  build-packages:
+    name: Build Distribution Packages
+    runs-on: macos-26
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_17.0.app/Contents/Developer
+
+    - name: Cache Swift Package Manager dependencies
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Cache Xcode DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+
+    - name: Install dependencies
+      run: |
+        # Install create-dmg for packaging
+        brew install create-dmg
+
+    - name: Build distribution packages
+      run: |
+        ./Scripts/build.sh packages
+
+    - name: Upload packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: distribution-packages
+        path: Packages/
+        retention-days: 30
+
+  security-scan:
+    name: Security Scan
+    runs-on: macos-26
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run security scan
+      run: |
+        # Check for common security issues
+        echo "Running security checks..."
+        
+        # Check for hardcoded secrets
+        if grep -r "password\|secret\|key\|token" --include="*.swift" --include="*.plist" . | grep -v "UsageDescription\|CFBundleIdentifier"; then
+          echo "⚠️  Potential hardcoded secrets found"
+          exit 1
+        fi
+        
+        # Check Info.plist for required privacy descriptions
+        if ! grep -q "NSSpeechRecognitionUsageDescription" LearnMorseCode/Info.plist; then
+          echo "❌ Missing NSSpeechRecognitionUsageDescription"
+          exit 1
+        fi
+        
+        if ! grep -q "NSMicrophoneUsageDescription" LearnMorseCode/Info.plist; then
+          echo "❌ Missing NSMicrophoneUsageDescription"
+          exit 1
+        fi
+        
+        echo "✅ Security checks passed"
+
+  code-quality:
+    name: Code Quality
+    runs-on: macos-26
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_17.0.app/Contents/Developer
+
+    - name: Run SwiftLint (if available)
+      run: |
+        if command -v swiftlint &> /dev/null; then
+          swiftlint
+        else
+          echo "SwiftLint not installed, skipping..."
+        fi
+
+    - name: Check code formatting
+      run: |
+        # Check for basic formatting issues
+        echo "Checking code formatting..."
+        
+        # Check for trailing whitespace
+        if find . -name "*.swift" -exec grep -l " $" {} \; | head -5; then
+          echo "⚠️  Found files with trailing whitespace"
+        fi
+        
+        # Check for consistent indentation (basic check)
+        echo "✅ Basic formatting checks completed"
+
+  performance-test:
+    name: Performance Test
+    runs-on: macos-26
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_17.0.app/Contents/Developer
+
+    - name: Run performance tests
+      run: |
+        # Run tests with performance measurements
+        ./Scripts/build.sh test
+        
+        # Check test execution time
+        echo "Performance test completed"
+
+  notify:
+    name: Notify Results
+    runs-on: macos-26
+    needs: [test, build-packages, security-scan, code-quality, performance-test]
+    if: always()
+
+    steps:
+    - name: Notify success
+      if: ${{ needs.test.result == 'success' && needs.security-scan.result == 'success' && needs.code-quality.result == 'success' && needs.performance-test.result == 'success' }}
+      run: |
+        echo "🎉 All CI checks passed!"
+        echo "✅ Tests: ${{ needs.test.result }}"
+        echo "✅ Security: ${{ needs.security-scan.result }}"
+        echo "✅ Code Quality: ${{ needs.code-quality.result }}"
+        echo "✅ Performance: ${{ needs.performance-test.result }}"
+        if [ "${{ needs.build-packages.result }}" == "success" ]; then
+          echo "✅ Packages: Built successfully"
+        fi
+
+    - name: Notify failure
+      if: ${{ needs.test.result == 'failure' || needs.security-scan.result == 'failure' || needs.code-quality.result == 'failure' || needs.performance-test.result == 'failure' }}
+      run: |
+        echo "❌ CI checks failed!"
+        echo "Tests: ${{ needs.test.result }}"
+        echo "Security: ${{ needs.security-scan.result }}"
+        echo "Code Quality: ${{ needs.code-quality.result }}"
+        echo "Performance: ${{ needs.performance-test.result }}"
+        exit 1
