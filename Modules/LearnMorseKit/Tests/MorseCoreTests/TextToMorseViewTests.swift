@@ -456,4 +456,41 @@ final class TextToMorseViewTests: XCTestCase {
         XCTAssertFalse(audioService.isPlaying)
         XCTAssertFalse(audioService.isPaused)
     }
+    
+    // MARK: - New Functionality Tests
+    
+    func testMixedContentConverterIntegration() {
+        // Test that MixedContentConverter works correctly
+        let converter = MixedContentConverter()
+        
+        let mixedInput = ".... . .-.. .-.. --- HELLO"
+        
+        do {
+            let result = try converter.convertMixedContent(mixedInput)
+            XCTAssertTrue(result.contains(".... . .-.. .-.. ---"), "Result should contain Morse code")
+            XCTAssertTrue(result.contains(".... . .-.. .-.. ---"), "Result should contain encoded text")
+        } catch {
+            XCTFail("Mixed content conversion should not throw error: \(error)")
+        }
+    }
+    
+    func testAudioServiceStateResetAfterCompletion() {
+        // Test that audio service state resets after Morse code finishes playing
+        let morseCode = "."
+        
+        // Start playing a short Morse code
+        audioService.playMorseCode(morseCode)
+        
+        // Wait for completion (this is a short Morse code)
+        let expectation = XCTestExpectation(description: "Morse code completion")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            // After completion, state should be reset
+            XCTAssertFalse(self.audioService.isPlaying, "Should not be playing after completion")
+            XCTAssertFalse(self.audioService.isPaused, "Should not be paused after completion")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 3.0)
+    }
 }

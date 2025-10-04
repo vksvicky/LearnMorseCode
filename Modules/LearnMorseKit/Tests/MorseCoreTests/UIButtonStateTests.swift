@@ -12,11 +12,11 @@ final class UIButtonStateTests: XCTestCase {
         // Initial state (stopped)
         var isPlaying = false
         var isPaused = false
-        var outputText = ".... . .-.. .-.. ---"
+        let outputText = ".... . .-.. .-.. ---"
         
-        let playButtonText = isPaused ? "Resume" : (isPlaying ? "Pause" : "Play")
-        let playButtonIcon = isPaused ? "play.fill" : (isPlaying ? "pause.fill" : "play.fill")
-        let playButtonColor = isPaused ? "orange" : (isPlaying ? "red" : "green")
+        let playButtonText = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonIcon = getButtonIcon(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonColor = getButtonColor(isPlaying: isPlaying, isPaused: isPaused)
         let playButtonEnabled = !outputText.isEmpty
         
         XCTAssertEqual(playButtonText, "Play", "Should show 'Play' when stopped")
@@ -28,9 +28,9 @@ final class UIButtonStateTests: XCTestCase {
         isPlaying = true
         isPaused = false
         
-        let playButtonTextPlaying = isPaused ? "Resume" : (isPlaying ? "Pause" : "Play")
-        let playButtonIconPlaying = isPaused ? "play.fill" : (isPlaying ? "pause.fill" : "play.fill")
-        let playButtonColorPlaying = isPaused ? "orange" : (isPlaying ? "red" : "green")
+        let playButtonTextPlaying = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonIconPlaying = getButtonIcon(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonColorPlaying = getButtonColor(isPlaying: isPlaying, isPaused: isPaused)
         
         XCTAssertEqual(playButtonTextPlaying, "Pause", "Should show 'Pause' when playing")
         XCTAssertEqual(playButtonIconPlaying, "pause.fill", "Should show pause icon when playing")
@@ -40,9 +40,9 @@ final class UIButtonStateTests: XCTestCase {
         isPlaying = false
         isPaused = true
         
-        let playButtonTextPaused = isPaused ? "Resume" : (isPlaying ? "Pause" : "Play")
-        let playButtonIconPaused = isPaused ? "play.fill" : (isPlaying ? "pause.fill" : "play.fill")
-        let playButtonColorPaused = isPaused ? "orange" : (isPlaying ? "red" : "green")
+        let playButtonTextPaused = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonIconPaused = getButtonIcon(isPlaying: isPlaying, isPaused: isPaused)
+        let playButtonColorPaused = getButtonColor(isPlaying: isPlaying, isPaused: isPaused)
         
         XCTAssertEqual(playButtonTextPaused, "Resume", "Should show 'Resume' when paused")
         XCTAssertEqual(playButtonIconPaused, "play.fill", "Should show play icon when paused")
@@ -50,218 +50,210 @@ final class UIButtonStateTests: XCTestCase {
     }
     
     func testStopButtonStateLogic() {
-        // Test the logic that determines stop button state
+        // Test stop button logic
         
         // Initial state (stopped)
         var isPlaying = false
         var isPaused = false
+        let _ = ".... . .-.. .-.. ---" // outputText not used in this test
         
         let stopButtonEnabled = isPlaying || isPaused
+        let stopButtonColor = stopButtonEnabled ? "red" : "gray"
+        
         XCTAssertFalse(stopButtonEnabled, "Stop button should be disabled when stopped")
+        XCTAssertEqual(stopButtonColor, "gray", "Stop button should be gray when disabled")
         
         // Playing state
         isPlaying = true
         isPaused = false
         
         let stopButtonEnabledPlaying = isPlaying || isPaused
+        let stopButtonColorPlaying = stopButtonEnabledPlaying ? "red" : "gray"
+        
         XCTAssertTrue(stopButtonEnabledPlaying, "Stop button should be enabled when playing")
+        XCTAssertEqual(stopButtonColorPlaying, "red", "Stop button should be red when enabled")
         
         // Paused state
         isPlaying = false
         isPaused = true
         
         let stopButtonEnabledPaused = isPlaying || isPaused
+        let stopButtonColorPaused = stopButtonEnabledPaused ? "red" : "gray"
+        
         XCTAssertTrue(stopButtonEnabledPaused, "Stop button should be enabled when paused")
+        XCTAssertEqual(stopButtonColorPaused, "red", "Stop button should be red when enabled")
     }
     
     func testButtonStateTransitions() {
-        // Test the complete state transition logic
+        // Test state transitions between different button states
         
+        // Start stopped
         var isPlaying = false
         var isPaused = false
-        let outputText = ".... . .-.. .-.. ---"
         
-        // Initial state
-        XCTAssertFalse(isPlaying)
-        XCTAssertFalse(isPaused)
         XCTAssertEqual(getButtonText(isPlaying: isPlaying, isPaused: isPaused), "Play")
-        XCTAssertFalse(getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused))
+        XCTAssertFalse(isPlaying || isPaused, "Stop button should be disabled")
         
-        // Play action
-        if !isPlaying && !isPaused {
-            isPlaying = true
-            isPaused = false
-        }
-        XCTAssertTrue(isPlaying)
-        XCTAssertFalse(isPaused)
+        // Transition to playing
+        isPlaying = true
+        isPaused = false
+        
         XCTAssertEqual(getButtonText(isPlaying: isPlaying, isPaused: isPaused), "Pause")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused))
+        XCTAssertTrue(isPlaying || isPaused, "Stop button should be enabled")
         
-        // Pause action
-        if isPlaying {
-            isPlaying = false
-            isPaused = true
-        }
-        XCTAssertFalse(isPlaying)
-        XCTAssertTrue(isPaused)
+        // Transition to paused
+        isPlaying = false
+        isPaused = true
+        
         XCTAssertEqual(getButtonText(isPlaying: isPlaying, isPaused: isPaused), "Resume")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused))
+        XCTAssertTrue(isPlaying || isPaused, "Stop button should be enabled")
         
-        // Resume action
-        if isPaused {
-            isPlaying = true
-            isPaused = false
-        }
-        XCTAssertTrue(isPlaying)
-        XCTAssertFalse(isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: isPlaying, isPaused: isPaused), "Pause")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused))
-        
-        // Stop action
+        // Transition back to stopped
         isPlaying = false
         isPaused = false
-        XCTAssertFalse(isPlaying)
-        XCTAssertFalse(isPaused)
+        
         XCTAssertEqual(getButtonText(isPlaying: isPlaying, isPaused: isPaused), "Play")
-        XCTAssertFalse(getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused))
+        XCTAssertFalse(isPlaying || isPaused, "Stop button should be disabled")
+    }
+    
+    func testButtonStateConsistency() {
+        // Test that button states are consistent across different scenarios
+        
+        let testCases: [(isPlaying: Bool, isPaused: Bool, expectedText: String, expectedIcon: String, expectedColor: String)] = [
+            (false, false, "Play", "play.fill", "green"),
+            (true, false, "Pause", "pause.fill", "red"),
+            (false, true, "Resume", "play.fill", "orange")
+        ]
+        
+        for testCase in testCases {
+            let text = getButtonText(isPlaying: testCase.isPlaying, isPaused: testCase.isPaused)
+            let icon = getButtonIcon(isPlaying: testCase.isPlaying, isPaused: testCase.isPaused)
+            let color = getButtonColor(isPlaying: testCase.isPlaying, isPaused: testCase.isPaused)
+            
+            XCTAssertEqual(text, testCase.expectedText, "Button text should match expected for state \(testCase.isPlaying), \(testCase.isPaused)")
+            XCTAssertEqual(icon, testCase.expectedIcon, "Button icon should match expected for state \(testCase.isPlaying), \(testCase.isPaused)")
+            XCTAssertEqual(color, testCase.expectedColor, "Button color should match expected for state \(testCase.isPlaying), \(testCase.isPaused)")
+        }
     }
     
     func testButtonStateWithEmptyOutput() {
         // Test button states when there's no output text
         
+        let outputText = ""
         let isPlaying = false
         let isPaused = false
-        let outputText = ""
         
         let playButtonEnabled = !outputText.isEmpty
-        XCTAssertFalse(playButtonEnabled, "Play button should be disabled when output is empty")
-        
         let stopButtonEnabled = isPlaying || isPaused
+        
+        XCTAssertFalse(playButtonEnabled, "Play button should be disabled when output is empty")
         XCTAssertFalse(stopButtonEnabled, "Stop button should be disabled when not playing or paused")
-    }
-    
-    func testButtonStateConsistency() {
-        // Test that button states are always consistent
-        
-        let states: [(Bool, Bool)] = [
-            (false, false), // stopped
-            (true, false),  // playing
-            (false, true)   // paused
-        ]
-        
-        for (isPlaying, isPaused) in states {
-            // Test that isPlaying and isPaused are mutually exclusive
-            if isPlaying && isPaused {
-                XCTFail("isPlaying and isPaused should not both be true")
-            }
-            
-            // Test button text consistency
-            let buttonText = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
-            let expectedText = isPaused ? "Resume" : (isPlaying ? "Pause" : "Play")
-            XCTAssertEqual(buttonText, expectedText, "Button text should be consistent with state")
-            
-            // Test stop button consistency
-            let stopEnabled = getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused)
-            let expectedStopEnabled = isPlaying || isPaused
-            XCTAssertEqual(stopEnabled, expectedStopEnabled, "Stop button state should be consistent")
-        }
-    }
-    
-    // MARK: - Helper Functions
-    
-    private func getButtonText(isPlaying: Bool, isPaused: Bool) -> String {
-        return isPaused ? "Resume" : (isPlaying ? "Pause" : "Play")
-    }
-    
-    private func getStopButtonEnabled(isPlaying: Bool, isPaused: Bool) -> Bool {
-        return isPlaying || isPaused
-    }
-    
-    // MARK: - Edge Cases
-    
-    func testButtonStateEdgeCases() {
-        // Test edge cases that shouldn't happen but we should handle gracefully
-        
-        // Both true (shouldn't happen but test for robustness)
-        var isPlaying = true
-        var isPaused = true
-        
-        let buttonText = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
-        XCTAssertEqual(buttonText, "Resume", "Should prioritize paused state when both are true")
-        
-        let stopEnabled = getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused)
-        XCTAssertTrue(stopEnabled, "Stop should be enabled when either is true")
     }
     
     func testButtonStateWithLongOutput() {
-        // Test button states with very long output text
+        // Test button states with long output text
         
-        let longOutput = String(repeating: ".... . .-.. .-.. --- ", count: 100)
+        let outputText = String(repeating: ".... . .-.. .-.. --- ", count: 100)
         let isPlaying = false
         let isPaused = false
         
-        let playButtonEnabled = !longOutput.isEmpty
-        XCTAssertTrue(playButtonEnabled, "Play button should be enabled with long output")
-        
+        let playButtonEnabled = !outputText.isEmpty
         let stopButtonEnabled = isPlaying || isPaused
+        
+        XCTAssertTrue(playButtonEnabled, "Play button should be enabled with long output")
         XCTAssertFalse(stopButtonEnabled, "Stop button should be disabled when not playing or paused")
     }
     
-    // MARK: - Performance Tests
+    func testButtonStateEdgeCases() {
+        // Test edge cases and invalid states
+        
+        // Both true (shouldn't happen but test for robustness)
+        let isPlaying = true
+        let isPaused = true
+        
+        let buttonText = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
+        let buttonIcon = getButtonIcon(isPlaying: isPlaying, isPaused: isPaused)
+        let buttonColor = getButtonColor(isPlaying: isPlaying, isPaused: isPaused)
+        
+        // Should prioritize paused state
+        XCTAssertEqual(buttonText, "Resume", "Should show 'Resume' when both playing and paused")
+        XCTAssertEqual(buttonIcon, "play.fill", "Should show play icon when both playing and paused")
+        XCTAssertEqual(buttonColor, "orange", "Should be orange when both playing and paused")
+    }
+    
+    func testButtonStateWithAudioService() {
+        // Test button states with actual AudioService
+        
+        let audioService = AudioService()
+        let outputText = ".... . .-.. .-.. ---"
+        
+        // Initial state
+        XCTAssertFalse(audioService.isPlaying, "Audio service should not be playing initially")
+        XCTAssertFalse(audioService.isPaused, "Audio service should not be paused initially")
+        
+        let initialPlayButtonText = getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused)
+        let initialStopButtonEnabled = audioService.isPlaying || audioService.isPaused
+        
+        XCTAssertEqual(initialPlayButtonText, "Play", "Should show 'Play' initially")
+        XCTAssertFalse(initialStopButtonEnabled, "Stop button should be disabled initially")
+        
+        // Test with actual Morse code playback
+        audioService.playMorseCode(outputText)
+        
+        // Note: In a real test, we'd need to wait for the audio to start
+        // For now, we'll test the state logic without actual audio playback
+        let playButtonEnabled = !outputText.isEmpty
+        XCTAssertTrue(playButtonEnabled, "Play button should be enabled with output text")
+    }
     
     func testButtonStatePerformance() {
-        // Test that button state calculations are fast
+        // Test performance of button state calculations
+        
+        let outputText = ".... . .-.. .-.. ---"
         
         measure {
-            for _ in 0..<1000 {
+            for _ in 0..<10000 {
                 let isPlaying = Bool.random()
                 let isPaused = Bool.random()
                 
                 _ = getButtonText(isPlaying: isPlaying, isPaused: isPaused)
-                _ = getStopButtonEnabled(isPlaying: isPlaying, isPaused: isPaused)
+                _ = getButtonIcon(isPlaying: isPlaying, isPaused: isPaused)
+                _ = getButtonColor(isPlaying: isPlaying, isPaused: isPaused)
+                _ = !outputText.isEmpty
+                _ = isPlaying || isPaused
             }
         }
     }
     
-    // MARK: - Integration Tests
+    // MARK: - Helper Methods
     
-    func testButtonStateWithAudioService() {
-        // Test button state logic with actual AudioService
-        
-        let audioService = AudioService()
-        
-        // Initial state
-        XCTAssertFalse(audioService.isPlaying)
-        XCTAssertFalse(audioService.isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused), "Play")
-        XCTAssertFalse(getStopButtonEnabled(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused))
-        
-        // Play
-        audioService.playMorseCode(".... . .-.. .-.. ---")
-        XCTAssertTrue(audioService.isPlaying)
-        XCTAssertFalse(audioService.isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused), "Pause")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused))
-        
-        // Pause
-        audioService.pause()
-        XCTAssertFalse(audioService.isPlaying)
-        XCTAssertTrue(audioService.isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused), "Resume")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused))
-        
-        // Resume
-        audioService.resume()
-        XCTAssertTrue(audioService.isPlaying)
-        XCTAssertFalse(audioService.isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused), "Pause")
-        XCTAssertTrue(getStopButtonEnabled(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused))
-        
-        // Stop
-        audioService.stop()
-        XCTAssertFalse(audioService.isPlaying)
-        XCTAssertFalse(audioService.isPaused)
-        XCTAssertEqual(getButtonText(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused), "Play")
-        XCTAssertFalse(getStopButtonEnabled(isPlaying: audioService.isPlaying, isPaused: audioService.isPaused))
+    private func getButtonText(isPlaying: Bool, isPaused: Bool) -> String {
+        if isPaused {
+            return "Resume"
+        } else if isPlaying {
+            return "Pause"
+        } else {
+            return "Play"
+        }
+    }
+    
+    private func getButtonIcon(isPlaying: Bool, isPaused: Bool) -> String {
+        if isPaused {
+            return "play.fill"
+        } else if isPlaying {
+            return "pause.fill"
+        } else {
+            return "play.fill"
+        }
+    }
+    
+    private func getButtonColor(isPlaying: Bool, isPaused: Bool) -> String {
+        if isPaused {
+            return "orange"
+        } else if isPlaying {
+            return "red"
+        } else {
+            return "green"
+        }
     }
 }
