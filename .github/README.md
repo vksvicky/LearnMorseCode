@@ -9,7 +9,7 @@ This directory contains GitHub Actions workflows for automated CI/CD, testing, a
 **Purpose:** Comprehensive testing and validation
 
 **Features:**
-- ✅ Tests on macOS 14, 15, 16, and 26
+- ✅ Tests on macOS 14, 15, and latest (macOS 26+)
 - ✅ Builds debug and release versions
 - ✅ Verifies version handling and auto-versioning
 - ✅ Security scanning for hardcoded secrets
@@ -21,8 +21,7 @@ This directory contains GitHub Actions workflows for automated CI/CD, testing, a
 ```yaml
 macos-14 → Xcode 15.4
 macos-15 → Xcode 16.0  
-macos-16 → Xcode 16.1
-macos-26 → Xcode 17.0
+macos-latest → Xcode 16.2
 ```
 
 ### 🚀 Release (`release.yml`)
@@ -107,8 +106,7 @@ The workflows use intelligent caching to speed up builds:
 ### macOS Runners
 - **macos-14**: macOS 14.0 with Xcode 15.4
 - **macos-15**: macOS 15.0 with Xcode 16.0
-- **macos-16**: macOS 16.0 with Xcode 16.1
-- **macos-26**: macOS 26.0 with Xcode 17.0
+- **macos-latest**: Latest macOS (26+) with Xcode 16.2
 
 ### Dependencies
 - `create-dmg` (installed via Homebrew)
@@ -168,14 +166,14 @@ gh run rerun <run-id>
 1. Update the matrix strategy in `ci.yml`:
 ```yaml
 matrix:
-  os: [macos-14, macos-15, macos-16, macos-26, macos-27]  # Add new version
+  os: [macos-14, macos-15, macos-latest, macos-16]  # Add new version
 ```
 
 2. Add Xcode version mapping:
 ```yaml
 include:
-  - os: macos-27
-    xcode: '17.1'  # Specify appropriate Xcode version
+  - os: macos-16
+    xcode: '16.3'  # Specify appropriate Xcode version
 ```
 
 ### Modifying Test Commands

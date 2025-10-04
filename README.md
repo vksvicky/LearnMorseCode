@@ -343,7 +343,7 @@ swift test --package-path Modules/LearnMorseKit
 This project uses GitHub Actions for automated CI/CD:
 
 ### 🔄 Automated Testing
-- **Multi-platform testing**: macOS 14, 15, 16, and 26
+- **Multi-platform testing**: macOS 14, 15, and latest (macOS 26+)
 - **Matrix builds**: Tests on different Xcode versions
 - **Pull request validation**: Automatic testing on PRs
 - **Security scanning**: Checks for vulnerabilities and hardcoded secrets
