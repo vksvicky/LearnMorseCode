@@ -1,7 +1,6 @@
 import XCTest
 @testable import MorseCore
 
-@MainActor
 final class UIButtonStateTests: XCTestCase {
     
     // MARK: - Button State Logic Tests

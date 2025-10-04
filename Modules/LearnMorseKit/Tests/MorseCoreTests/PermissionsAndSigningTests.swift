@@ -2,7 +2,6 @@ import XCTest
 import AVFoundation
 import Speech
 
-@MainActor
 final class PermissionsAndSigningTests: XCTestCase {
     
     // MARK: - Test Setup

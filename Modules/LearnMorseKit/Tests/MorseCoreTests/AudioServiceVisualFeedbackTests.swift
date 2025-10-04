@@ -1,7 +1,6 @@
 import XCTest
 @testable import MorseCore
 
-@MainActor
 final class AudioServiceVisualFeedbackTests: XCTestCase {
     
     private var audioService: AudioService!

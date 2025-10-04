@@ -87,7 +87,7 @@ public struct VoiceToMorseView: View {
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .onChange(of: selectedAudioInput) { newValue in
+                .onChange(of: selectedAudioInput) { _, newValue in
                     if let newValue = newValue {
                         selectAudioInput(newValue)
                     }
@@ -321,8 +321,8 @@ public struct VoiceToMorseView: View {
         
         if defaultDeviceStatus == noErr {
             // Get device name
-            var deviceName: CFString? = nil
-            var deviceNameSize = UInt32(MemoryLayout<CFString>.size)
+            var deviceName: Unmanaged<CFString>? = nil
+            var deviceNameSize = UInt32(MemoryLayout<Unmanaged<CFString>>.size)
             var deviceNameProperty = AudioObjectPropertyAddress(
                 mSelector: kAudioDevicePropertyDeviceNameCFString,
                 mScope: kAudioObjectPropertyScopeGlobal,
@@ -341,7 +341,7 @@ public struct VoiceToMorseView: View {
             if deviceNameStatus == noErr, let name = deviceName {
                 devices.append(AudioDeviceInfo(
                     id: "\(defaultDeviceID)",
-                    name: name as String,
+                    name: name.takeRetainedValue() as String,
                     type: "Default"
                 ))
             }
@@ -398,8 +398,8 @@ public struct VoiceToMorseView: View {
                     
                     if inputChannelsStatus == noErr && inputChannels > 0 {
                         // Get device name
-                        var deviceName: CFString? = nil
-                        var deviceNameSize = UInt32(MemoryLayout<CFString>.size)
+                        var deviceName: Unmanaged<CFString>? = nil
+                        var deviceNameSize = UInt32(MemoryLayout<Unmanaged<CFString>>.size)
                         var deviceNameProperty = AudioObjectPropertyAddress(
                             mSelector: kAudioDevicePropertyDeviceNameCFString,
                             mScope: kAudioObjectPropertyScopeGlobal,
@@ -418,7 +418,7 @@ public struct VoiceToMorseView: View {
                         if deviceNameStatus == noErr, let name = deviceName {
                             // Determine device type based on name
                             var deviceType = "Unknown"
-                            let deviceNameStr = name as String
+                            let deviceNameStr = name.takeRetainedValue() as String
                             if deviceNameStr.contains("MacBook") || deviceNameStr.contains("Built-in") || deviceNameStr.contains("Internal") {
                                 deviceType = "Built-in"
                             } else if deviceNameStr.contains("USB") || deviceNameStr.contains("External") || deviceNameStr.contains("Headset") {
@@ -643,7 +643,7 @@ public struct VoiceToMorseView: View {
              #if os(macOS)
              print("🔍 Available input devices:")
              let audioEngine = self.audioEngine
-             if let inputNode = audioEngine.inputNode as? AVAudioInputNode {
+             let inputNode = audioEngine.inputNode
                  print("   - Input node: \(inputNode)")
                  print("   - Number of inputs: \(inputNode.numberOfInputs)")
                  for i in 0..<inputNode.numberOfInputs {
@@ -657,40 +657,35 @@ public struct VoiceToMorseView: View {
              #endif
             
             // Install tap with native format and standard buffer
-            do {
-                 inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, time in
-                     request.append(buffer)
-                     
-                     // Monitor audio levels - lower threshold to catch more audio
-                     let level = self.calculateAudioLevel(buffer: buffer)
-                     
-                     // Log every buffer for debugging
-                     print("📊 Buffer: \(buffer.frameLength) frames, level: \(String(format: "%.6f", level))")
-                     
-                     if level > 0.0001 { // Much lower threshold
-                         print("🎙️ Audio detected: \(String(format: "%.6f", level))")
-                     } else {
-                         print("🔍 No audio detected (level: \(String(format: "%.6f", level)))")
-                     }
-                     
-                     // Check if buffer has any non-zero samples
-                     if let channelData = buffer.floatChannelData {
-                         let channelDataValue = channelData.pointee
-                         let hasNonZeroSamples = (0..<Int(buffer.frameLength)).contains { channelDataValue[$0] != 0.0 }
-                         if hasNonZeroSamples {
-                             print("🎙️ Non-zero samples detected!")
-                         }
-                         
-                         // Log first few samples to see what we're getting
-                         if Int(time.sampleTime) % 44100 == 0 { // Every second
-                             let firstSamples = (0..<min(10, Int(buffer.frameLength))).map { channelDataValue[$0] }
-                             print("🔍 First 10 samples: \(firstSamples)")
-                         }
-                     }
-                 }
-            } catch {
-                print("❌ Failed to install tap: \(error)")
-                return
+            inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, time in
+                request.append(buffer)
+                
+                // Monitor audio levels - lower threshold to catch more audio
+                let level = self.calculateAudioLevel(buffer: buffer)
+                
+                // Log every buffer for debugging
+                print("📊 Buffer: \(buffer.frameLength) frames, level: \(String(format: "%.6f", level))")
+                
+                if level > 0.0001 { // Much lower threshold
+                    print("🎙️ Audio detected: \(String(format: "%.6f", level))")
+                } else {
+                    print("🔍 No audio detected (level: \(String(format: "%.6f", level)))")
+                }
+                
+                // Check if buffer has any non-zero samples
+                if let channelData = buffer.floatChannelData {
+                    let channelDataValue = channelData.pointee
+                    let hasNonZeroSamples = (0..<Int(buffer.frameLength)).contains { channelDataValue[$0] != 0.0 }
+                    if hasNonZeroSamples {
+                        print("🎙️ Non-zero samples detected!")
+                    }
+                    
+                    // Log first few samples to see what we're getting
+                    if Int(time.sampleTime) % 44100 == 0 { // Every second
+                        let firstSamples = (0..<min(10, Int(buffer.frameLength))).map { channelDataValue[$0] }
+                        print("🔍 First 10 samples: \(firstSamples)")
+                    }
+                }
             }
             
              // Start recognition task

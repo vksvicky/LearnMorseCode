@@ -1,7 +1,6 @@
 import XCTest
 @testable import MorseCore
 
-@MainActor
 final class MorseCodeModelTests: XCTestCase {
     final class MockEncoder: MorseEncoding {
         var lastInput: String = ""

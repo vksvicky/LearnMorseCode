@@ -3,7 +3,6 @@ import SwiftUI
 @testable import MorseCore
 @testable import LearnMorseUI
 
-@MainActor
 final class TextToMorseViewTests: XCTestCase {
     
     // MARK: - Test Setup

@@ -3,7 +3,6 @@ import AVFoundation
 import Speech
 @testable import MorseCore
 
-@MainActor
 final class AudioDeviceDetectionTests: XCTestCase {
     
     // MARK: - Test Setup

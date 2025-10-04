@@ -5,7 +5,6 @@ import Speech
 @testable import MorseCore
 @testable import LearnMorseUI
 
-@MainActor
 final class VoiceToMorseViewTests: XCTestCase {
     
     // MARK: - Test Setup

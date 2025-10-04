@@ -1,12 +1,21 @@
 import Foundation
 
 public struct PracticeSession: Codable, Identifiable {
-    public let id = UUID()
+    public let id: UUID
     public let date: Date
     public let mode: String
     public let score: Int
     public let totalQuestions: Int
     public let duration: TimeInterval
+    
+    public init(date: Date, mode: String, score: Int, totalQuestions: Int, duration: TimeInterval) {
+        self.id = UUID()
+        self.date = date
+        self.mode = mode
+        self.score = score
+        self.totalQuestions = totalQuestions
+        self.duration = duration
+    }
     
     public var accuracy: Double {
         guard totalQuestions > 0 else { return 0 }
