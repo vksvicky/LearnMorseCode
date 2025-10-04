@@ -1,7 +1,6 @@
 import XCTest
 import SwiftUI
 @testable import MorseCore
-@testable import LearnMorseUI
 
 final class TextToMorseViewTests: XCTestCase {
     
