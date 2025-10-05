@@ -109,6 +109,7 @@ show_usage() {
     echo "  run         Build and run app - auto-increments build number"
     echo "  test        Run tests with coverage (uses current tested version)"
     echo "  packages    Build distribution packages (uses current tested version)"
+    echo "  github      Build packages and create GitHub release (uses current tested version)"
     echo "  clean       Clean build artifacts"
     echo "  diagnose    Diagnose version information and running processes"
     echo "  help        Show this help message"
@@ -379,7 +380,11 @@ build_packages() {
     print_status "Creating release notes..."
     
     # Capture Xcode version to avoid broken pipe in heredoc
-    XCODE_VERSION=$(xcodebuild -version | head -1)
+    # Use temporary file approach to avoid broken pipe exceptions
+    TEMP_XCODE_VERSION=$(mktemp)
+    xcodebuild -version > "$TEMP_XCODE_VERSION" 2>/dev/null || echo "Xcode (version unknown)" > "$TEMP_XCODE_VERSION"
+    XCODE_VERSION=$(head -1 "$TEMP_XCODE_VERSION")
+    rm -f "$TEMP_XCODE_VERSION"
     
     {
     cat << EOF
@@ -588,6 +593,68 @@ EOF
     print_success "Distribution packages ready! 🎉"
 }
 
+# Function to create GitHub release
+create_github_release() {
+    local version="$1"
+    local build_number="$2"
+    local tag="v$version-$build_number"
+    
+    print_status "Creating GitHub release: $tag"
+    
+    # Check if we're in a git repository
+    if ! git rev-parse --git-dir > /dev/null 2>&1; then
+        print_error "Not in a git repository. Cannot create release."
+        return 1
+    fi
+    
+    # Check if tag already exists
+    if git tag -l | grep -q "^$tag$"; then
+        print_warning "Tag $tag already exists. Skipping release creation."
+        return 0
+    fi
+    
+    # Create and push tag
+    print_status "Creating tag: $tag"
+    git tag "$tag"
+    git push origin "$tag"
+    
+    # Create release using GitHub CLI if available
+    if command -v gh &> /dev/null; then
+        print_status "Creating release using GitHub CLI..."
+        
+        # Read release notes
+        local release_notes=""
+        if [ -f "$PACKAGES_DIR/RELEASE_NOTES_v$version.md" ]; then
+            release_notes=$(cat "$PACKAGES_DIR/RELEASE_NOTES_v$version.md")
+        fi
+        
+        # Create release
+        gh release create "$tag" \
+            --title "LearnMorseCode v$version" \
+            --notes "$release_notes" \
+            "$PACKAGES_DIR/$PROJECT_NAME-Universal-v$version.dmg" \
+            "$PACKAGES_DIR/$PROJECT_NAME-Silicon-v$version.dmg" \
+            "$PACKAGES_DIR/$PROJECT_NAME-Universal-v$version.zip" \
+            "$PACKAGES_DIR/$PROJECT_NAME-Silicon-v$version.zip" \
+            "$PACKAGES_DIR/RELEASE_NOTES_v$version.md" \
+            "$PACKAGES_DIR/CHECKSUMS_v$version.txt"
+        
+        if [ $? -eq 0 ]; then
+            print_success "GitHub release created successfully!"
+            echo "🔗 Release URL: https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:/]\([^.]*\).*/\1/')/releases/tag/$tag"
+        else
+            print_error "Failed to create GitHub release"
+            return 1
+        fi
+    else
+        print_warning "GitHub CLI (gh) not found. Please install it to create releases automatically."
+        print_info "You can create the release manually at: https://github.com/$(git config --get remote.origin.url | sed 's/.*github.com[:/]\([^.]*\).*/\1/')/releases/new"
+        print_info "Tag: $tag"
+        print_info "Upload the packages from: $PACKAGES_DIR/"
+        return 1
+    fi
+}
+
 # Function to diagnose version issues
 diagnose_version() {
     print_status "Diagnosing version information..."
@@ -699,7 +766,7 @@ main() {
         VERSION=$(echo "$auto_version_info" | cut -d'|' -f1)
         BUILD_NUMBER=$(echo "$auto_version_info" | cut -d'|' -f2)
         print_status "Auto-generated version: $VERSION (Build $BUILD_NUMBER)"
-    elif [[ "$COMMAND" == "packages" || "$COMMAND" == "test" ]]; then
+    elif [[ "$COMMAND" == "packages" || "$COMMAND" == "test" || "$COMMAND" == "github" ]]; then
         # For packages and test, always use current Info.plist values (tested version)
         print_status "$COMMAND command: using current tested version from Info.plist..."
         local current_version_info=$(read_current_version)
@@ -739,6 +806,10 @@ main() {
             ;;
         packages)
             build_packages
+            ;;
+        github)
+            build_packages
+            create_github_release "$VERSION" "$BUILD_NUMBER"
             ;;
         clean)
             clean_builds
