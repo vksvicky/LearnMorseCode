@@ -377,6 +377,10 @@ build_packages() {
     
     # Create release notes
     print_status "Creating release notes..."
+    
+    # Capture Xcode version to avoid broken pipe in heredoc
+    XCODE_VERSION=$(xcodebuild -version | head -1)
+    
     {
     cat << EOF
 # LearnMorseCode v$VERSION Release Notes
@@ -485,7 +489,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Version: $VERSION
 - Build: $BUILD_NUMBER
 - Built: $(date)
-- Xcode: $(xcodebuild -version | head -1)
+- Xcode: $XCODE_VERSION
 EOF
     } > "$PACKAGES_DIR/RELEASE_NOTES_v$VERSION.md"
     
