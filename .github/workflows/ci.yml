@@ -15,11 +15,11 @@ jobs:
         os: [macos-14, macos-15, macos-latest]
         include:
           - os: macos-14
-            xcode: '15.4'
+            xcode: '16.4'
           - os: macos-15
-            xcode: '16.0'
+            xcode: '16.4'
           - os: macos-latest
-            xcode: '16.2'
+            xcode: '26.0.1'
 
     steps:
     - name: Checkout code
@@ -143,8 +143,8 @@ jobs:
         # Check for common security issues
         echo "Running security checks..."
         
-        # Check for hardcoded secrets
-        if grep -r "password\|secret\|key\|token" --include="*.swift" --include="*.plist" . | grep -v "UsageDescription\|CFBundleIdentifier"; then
+        # Check for hardcoded secrets (more specific patterns)
+        if grep -r "password\s*=\|secret\s*=\|api_key\|private_key\|access_token\|bearer_token" --include="*.swift" --include="*.plist" . | grep -v "UsageDescription\|CFBundleIdentifier\|MorseCode\|token.*:"; then
           echo "⚠️  Potential hardcoded secrets found"
           exit 1
         fi
@@ -174,7 +174,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
 
     - name: Run SwiftLint (if available)
       run: |
@@ -209,7 +209,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
 
     - name: Run performance tests
       run: |

@@ -19,9 +19,9 @@ This directory contains GitHub Actions workflows for automated CI/CD, testing, a
 
 **Matrix Strategy:**
 ```yaml
-macos-14 → Xcode 15.4
-macos-15 → Xcode 16.0  
-macos-latest → Xcode 16.2
+macos-14 → Xcode 16.4
+macos-15 → Xcode 16.4  
+macos-latest → Xcode 26.0.1
 ```
 
 ### 🚀 Release (`release.yml`)
@@ -104,9 +104,9 @@ The workflows use intelligent caching to speed up builds:
 ## Environment Requirements
 
 ### macOS Runners
-- **macos-14**: macOS 14.0 with Xcode 15.4
-- **macos-15**: macOS 15.0 with Xcode 16.0
-- **macos-latest**: Latest macOS (26+) with Xcode 16.2
+- **macos-14**: macOS 14.0 with Xcode 16.4
+- **macos-15**: macOS 15.0 with Xcode 16.4
+- **macos-latest**: Latest macOS (26+) with Xcode 26.0.1
 
 ### Dependencies
 - `create-dmg` (installed via Homebrew)

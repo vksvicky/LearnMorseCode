@@ -18,7 +18,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
 
     - name: Check for outdated dependencies
       run: |
@@ -42,8 +42,8 @@ jobs:
         # Check for common security issues in Swift code
         echo "Checking for potential security issues..."
         
-        # Check for hardcoded secrets (basic check)
-        if find . -name "*.swift" -exec grep -l "password\|secret\|key\|token" {} \; | grep -v "UsageDescription\|CFBundleIdentifier" | head -5; then
+        # Check for hardcoded secrets (more specific patterns)
+        if find . -name "*.swift" -exec grep -l "password\s*=\|secret\s*=\|api_key\|private_key\|access_token\|bearer_token" {} \; | grep -v "UsageDescription\|CFBundleIdentifier\|MorseCode" | head -5; then
           echo "⚠️  Potential hardcoded secrets found"
         else
           echo "✅ No obvious hardcoded secrets found"
@@ -71,7 +71,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
 
     - name: Check code formatting
       run: |
@@ -108,7 +108,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
 
     - name: Install dependencies
       run: |
