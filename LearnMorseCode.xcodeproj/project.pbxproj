@@ -47,7 +47,7 @@
 				E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */,
 				E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */,
 				E2A93E992E8BC0D400EE2075 /* LearnMorseCodeUITests */,
-				E2A93E7D2E8BC0D300EE2075 /* Products */,
+				E2A93E892E8BC0D300EE2075 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,7 +82,7 @@
 			path = LearnMorseCodeUITests;
 			sourceTree = "<group>";
 		};
-		E2A93E7D2E8BC0D300EE2075 /* Products */ = {
+		E2A93E892E8BC0D300EE2075 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */,
