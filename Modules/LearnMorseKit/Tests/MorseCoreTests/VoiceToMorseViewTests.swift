@@ -3,7 +3,6 @@ import SwiftUI
 import AVFoundation
 import Speech
 @testable import MorseCore
-@testable import LearnMorseUI
 
 final class VoiceToMorseViewTests: XCTestCase {
     
