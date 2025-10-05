@@ -18,7 +18,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '16.4'
+        xcode-version: '15.4'
 
     - name: Check for outdated dependencies
       run: |
@@ -71,7 +71,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '16.4'
+        xcode-version: '15.4'
 
     - name: Check code formatting
       run: |
@@ -108,7 +108,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '16.4'
+        xcode-version: '15.4'
 
     - name: Install dependencies
       run: |
