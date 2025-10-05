@@ -33,18 +33,12 @@ jobs:
     - name: Cache Swift Package Manager dependencies
       uses: actions/cache@v4
       with:
-        path: .build
+        path: |
+          .build
+          ~/Library/Developer/Xcode/DerivedData
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
-
-    - name: Cache Xcode DerivedData
-      uses: actions/cache@v4
-      with:
-        path: ~/Library/Developer/Xcode/DerivedData
-        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.swift') }}
-        restore-keys: |
-          ${{ runner.os }}-deriveddata-
 
     - name: Install dependencies
       run: |
@@ -100,18 +94,12 @@ jobs:
     - name: Cache Swift Package Manager dependencies
       uses: actions/cache@v4
       with:
-        path: .build
+        path: |
+          .build
+          ~/Library/Developer/Xcode/DerivedData
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
           ${{ runner.os }}-spm-
-
-    - name: Cache Xcode DerivedData
-      uses: actions/cache@v4
-      with:
-        path: ~/Library/Developer/Xcode/DerivedData
-        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/*.swift') }}
-        restore-keys: |
-          ${{ runner.os }}-deriveddata-
 
     - name: Install dependencies
       run: |

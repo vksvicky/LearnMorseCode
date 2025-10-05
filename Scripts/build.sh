@@ -377,7 +377,8 @@ build_packages() {
     
     # Create release notes
     print_status "Creating release notes..."
-    cat > "$PACKAGES_DIR/RELEASE_NOTES_v$VERSION.md" << EOF
+    {
+    cat << EOF
 # LearnMorseCode v$VERSION Release Notes
 
 ## 🎉 What's New
@@ -486,6 +487,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Built: $(date)
 - Xcode: $(xcodebuild -version | head -1)
 EOF
+    } > "$PACKAGES_DIR/RELEASE_NOTES_v$VERSION.md"
     
     # Create ZIP packages with release notes and checksums
     print_status "Creating ZIP packages..."
