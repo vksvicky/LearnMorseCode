@@ -28,25 +28,78 @@
 /* Begin PBXFileReference section */
 		E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnMorseCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2A93E8C2E8BC0D400EE2075 /* LearnMorseCodeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LearnMorseCodeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2A93E802E8BC0D300EE2075 /* LearnMorseCodeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnMorseCodeApp.swift; sourceTree = "<group>"; };
+		E2A93E812E8BC0D300EE2075 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E2A93E832E8BC0D300EE2075 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E2A93E862E8BC0D300EE2075 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2A93E872E8BC0D300EE2075 /* LearnMorseCode.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LearnMorseCode.entitlements; sourceTree = "<group>"; };
+		E2A93E882E8BC0D300EE2075 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		E2A93E842E8BC0D300EE2075 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E2A93E902E8BC0D400EE2075 /* LearnMorseCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnMorseCodeTests.swift; sourceTree = "<group>"; };
+		E2A93E9A2E8BC0D400EE2075 /* LearnMorseCodeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnMorseCodeUITests.swift; sourceTree = "<group>"; };
+		E2A93E9C2E8BC0D400EE2075 /* LearnMorseCodeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnMorseCodeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
+/* Begin PBXGroup section */
+		E2A93E7E2E8BC0D300EE2075 = {
+			isa = PBXGroup;
+			children = (
+				E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */,
+				E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */,
+				E2A93E992E8BC0D400EE2075 /* LearnMorseCodeUITests */,
+				E2A93E7D2E8BC0D300EE2075 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
 		E2A93E7F2E8BC0D300EE2075 /* LearnMorseCode */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+				E2A93E802E8BC0D300EE2075 /* LearnMorseCodeApp.swift */,
+				E2A93E812E8BC0D300EE2075 /* ContentView.swift */,
+				E2A93E832E8BC0D300EE2075 /* Assets.xcassets */,
+				E2A93E852E8BC0D300EE2075 /* Preview Content */,
+				E2A93E862E8BC0D300EE2075 /* Info.plist */,
+				E2A93E872E8BC0D300EE2075 /* LearnMorseCode.entitlements */,
+				E2A93E882E8BC0D300EE2075 /* Fonts.swift */,
+			);
 			path = LearnMorseCode;
 			sourceTree = "<group>";
 		};
 		E2A93E8F2E8BC0D400EE2075 /* LearnMorseCodeTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+				E2A93E902E8BC0D400EE2075 /* LearnMorseCodeTests.swift */,
+			);
 			path = LearnMorseCodeTests;
 			sourceTree = "<group>";
 		};
 		E2A93E992E8BC0D400EE2075 /* LearnMorseCodeUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+				E2A93E9A2E8BC0D400EE2075 /* LearnMorseCodeUITests.swift */,
+				E2A93E9C2E8BC0D400EE2075 /* LearnMorseCodeUITestsLaunchTests.swift */,
+			);
 			path = LearnMorseCodeUITests;
 			sourceTree = "<group>";
 		};
-/* End PBXFileSystemSynchronizedRootGroup section */
+		E2A93E7D2E8BC0D300EE2075 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2A93E7D2E8BC0D300EE2075 /* LearnMorseCode.app */,
+				E2A93E8C2E8BC0D400EE2075 /* LearnMorseCodeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2A93E852E8BC0D300EE2075 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E2A93E842E8BC0D300EE2075 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E2A93E7A2E8BC0D300EE2075 /* Frameworks */ = {
