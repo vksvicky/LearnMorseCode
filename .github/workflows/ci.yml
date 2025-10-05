@@ -174,7 +174,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '26.0.1'
 
     - name: Run SwiftLint (if available)
       run: |
@@ -209,7 +209,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4'
+        xcode-version: '26.0.1'
 
     - name: Run performance tests
       run: |
